@@ -15,7 +15,7 @@ class ConfigProvider:
     @staticmethod
     def load_secret_json():
         try:
-            with open(r"C:\IDE's\PyCharm\QA automation course\QA automation repo\QA-automation\linkedin_api_testing"
+            with open(r"C:\IDE's\PyCharm Community Edition 2024.1.1\python-projects\Automation-Final-Project"
                       r"\secret.json", 'r') as f:
                 return json.load(f)
         except FileNotFoundError:
