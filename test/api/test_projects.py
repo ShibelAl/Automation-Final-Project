@@ -1,7 +1,8 @@
 import unittest
+from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
-from logic.api.get_multiple_projects import GetMultipleProjects
+from logic.api.projects import Projects
 
 
 class TestContactAPI(unittest.TestCase):
@@ -14,7 +15,7 @@ class TestContactAPI(unittest.TestCase):
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
-        self.projects = GetMultipleProjects(self._api_request)
+        self.projects = Projects(self._api_request)
         self.projects_response = self.projects.get_multiple_projects()
 
     def test_getting_multiple_projects(self):
@@ -25,6 +26,14 @@ class TestContactAPI(unittest.TestCase):
         """
         # Act
         response_body = self.projects_response.json()
+        # Assert
+        print(response_body)
+        self.assertEqual(self.projects_response.status_code, 200)
+
+    def test_create_a_project(self):
+        # Act
+        projects_response_two = self.projects.create_a_project()
+        response_body = projects_response_two.json()
         # Assert
         print(response_body)
         self.assertEqual(self.projects_response.status_code, 200)
