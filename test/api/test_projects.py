@@ -1,5 +1,4 @@
 import unittest
-from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
 from logic.api.projects import Projects
@@ -16,7 +15,6 @@ class TestContactAPI(unittest.TestCase):
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
         self.projects = Projects(self._api_request)
-        self.projects_response = self.projects.get_multiple_projects()
 
     def test_getting_multiple_projects(self):
         """
@@ -25,15 +23,12 @@ class TestContactAPI(unittest.TestCase):
         :assert: Asserts that the response status code is 200.
         """
         # Act
-        response_body = self.projects_response.json()
+        projects_response = self.projects.get_multiple_projects()
         # Assert
-        print(response_body)
-        self.assertEqual(self.projects_response.status_code, 200)
+        self.assertEqual(projects_response.status_code, 200)
 
     def test_create_a_project(self):
         # Act
-        projects_response_two = self.projects.create_a_project()
-        response_body = projects_response_two.json()
+        projects_response = self.projects.create_a_project()
         # Assert
-        print(response_body)
-        self.assertEqual(self.projects_response.status_code, 200)
+        self.assertEqual(projects_response.status_code, 201)
