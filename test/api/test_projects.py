@@ -1,4 +1,5 @@
 import unittest
+from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
 from logic.api.projects import Projects
@@ -16,19 +17,19 @@ class TestContactAPI(unittest.TestCase):
         self._api_request = APIWrapper()
         self.projects = Projects(self._api_request)
 
-    def test_getting_multiple_projects(self):
-        """
-        Tests retrieving multiple projects from the API.
-
-        :assert: Asserts that the response status code is 200.
-        """
-        # Act
-        projects_response = self.projects.get_multiple_projects()
-        # Assert
-        self.assertEqual(projects_response.status_code, 200)
-
     def test_create_a_project(self):
+        """
+        Test creating a new project and verifying it is added to the list of existing projects.
+        """
+        # Arrange
+        new_project_name = Utils.generate_random_string()
+
         # Act
-        projects_response = self.projects.create_a_project()
+        new_project = self.projects.create_a_project(new_project_name)
+        existing_projects = self.projects.get_multiple_projects()
+
         # Assert
-        self.assertEqual(projects_response.status_code, 201)
+        self.assertEqual(new_project.status_code, 201)
+        self.assertEqual(existing_projects.status_code, 200)
+        self.assertIn(new_project_name, self.projects.projects_names(existing_projects.json()),
+                      f"{new_project_name} not found in existing projects.")
