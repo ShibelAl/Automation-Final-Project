@@ -9,11 +9,6 @@ class Projects:
     """
     REQUEST_URL_ENDPOINT = "projects"
     MY_WORKSPACE = "1207971857090881"
-    REQUEST_URL_HEADERS = {
-        "accept": "application/json",
-        "authorization": "Bearer 2/1207765887158107/1207950749297325:82f0336e6f7f84ee94c4f8098d9c4ace",
-        "content-type": "application/json"
-    }
 
     def __init__(self, request):
         """
@@ -23,6 +18,7 @@ class Projects:
         """
         self._request = request
         self._config = ConfigProvider().load_config_json()
+        self._secret = ConfigProvider().load_secret_json()
 
     def get_multiple_projects(self):
         """
@@ -31,7 +27,7 @@ class Projects:
         :return: The response from the API call to get multiple projects.
         """
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
-        return self._request.get_request(url, self.REQUEST_URL_HEADERS)
+        return self._request.get_request(url, self._secret['projects_headers'])
 
     def create_a_project(self):
         """
@@ -39,5 +35,4 @@ class Projects:
         """
         body = ProjectEntity(Utils.generate_random_string(), self.MY_WORKSPACE)
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
-        print(body.to_dict())
-        return self._request.post_request(url, self._config['projects_headers'], body.to_dict())
+        return self._request.post_request(url, self._secret['projects_headers'], body.to_dict())
