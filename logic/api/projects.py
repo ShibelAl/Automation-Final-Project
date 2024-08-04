@@ -29,10 +29,19 @@ class Projects:
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
         return self._request.get_request(url, self._secret['projects_headers'])
 
-    def create_a_project(self):
+    def create_a_project(self, project_name):
         """
         Creates a new project in the website.
+        The new project comes with a random name consists of 12 letters.
         """
-        body = ProjectEntity(Utils.generate_random_string(), self.MY_WORKSPACE)
+        body = ProjectEntity(project_name, self.MY_WORKSPACE)
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
         return self._request.post_request(url, self._secret['projects_headers'], body.to_dict())
+
+    @staticmethod
+    def projects_names(existing_projects):
+        """
+        :param existing_projects: a dictionary that contains all the projects in the workspace.
+        :return: all projects names in the received collection of projects.
+        """
+        return [project['name'] for project in existing_projects['data']]
