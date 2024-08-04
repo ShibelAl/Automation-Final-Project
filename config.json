@@ -2,7 +2,7 @@
   "browser": "Chrome",
   "base_url_api": "https://app.asana.com/api/1.0/",
   "base_url_app" : "https://app.asana.com/-/login?_gl=1*1djl4ag*_gcl_au*NDc0NzM1ODMyLjE3MjA1MTc0MDM.*FPAU*NDc0NzM1ODMyLjE3MjA1MTc0MDM.*_ga*MTg4MTYyMzQ1MC4xNzIwNTE3NDA0*_ga_J1KDXMCQTH*MTcyMDUxNzQwMy4xLjEuMTcyMDUxNzQwMy42MC4wLjMxMjU4MDEzMA..*_fplc*QjVLZlYlMkJ3cyUyRllEWWdwOVdCSTBEMXBtRVJteUtROEpsMyUyQnRmdXdZZzc2elBWYmpKbGgwOVVVZkZsM2RMU1dYdyUyQmZ0Mjkwam1MbzluTzlHcjlKdGVMUXUlMkY4NEZhRVJTbFNNVUFtcGw0bXJHVzMzNHU0a3JsS2QzSXBodUxlQSUzRCUzRA..",
-  "asana_email" : "shibelalshech300@gmail.com",
+  "asana_email" : "sybl85850@gmail.com",
 
   "get_multiple_projects_headers" : {
     "accept" : "application/json",

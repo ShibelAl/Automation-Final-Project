@@ -8,6 +8,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 
 class TestLoginPage(unittest.TestCase):
+    HOME_PAGE_URL = "https://app.asana.com/0/home/1207971857090891"
 
     def setUp(self):
         """
@@ -36,6 +37,6 @@ class TestLoginPage(unittest.TestCase):
         login_page = LoginPage(self.driver)
         # Act
         login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
-        WebDriverWait(self.driver, 10).until(ec.url_to_be("https://app.asana.com/0/home/1207765960679158"))
+        WebDriverWait(self.driver, 10).until(ec.url_to_be(self.HOME_PAGE_URL))
         # Assert
-        self.assertEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
+        self.assertEqual(self.driver.current_url, self.HOME_PAGE_URL)
