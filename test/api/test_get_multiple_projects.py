@@ -17,7 +17,7 @@ class TestContactAPI(unittest.TestCase):
         self.projects = GetMultipleProjects(self._api_request)
         self.projects_response = self.projects.get_multiple_projects()
 
-    def test_getting_multiple_emails(self):
+    def test_getting_multiple_projects(self):
         """
         Tests retrieving multiple projects from the API.
 
