@@ -1,4 +1,3 @@
-from infra.utils import Utils
 from infra.config_provider import ConfigProvider
 from logic.api.entities.project import ProjectEntity
 
