@@ -22,5 +22,5 @@ class GetMultipleProjects:
 
         :return: The response from the API call to get multiple projects.
         """
-        url = f"{self._config['base_url']}{self.REQUEST_URL_ENDPOINT}"
+        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
         return self._request.get_request(url, self._config['get_multiple_projects_headers'])
