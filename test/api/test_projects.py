@@ -5,7 +5,7 @@ from infra.config_provider import ConfigProvider
 from logic.api.projects import Projects
 
 
-class TestContactAPI(unittest.TestCase):
+class TestProjects(unittest.TestCase):
     """
     A test case to retrieve multiple projects.
     """
