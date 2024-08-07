@@ -26,7 +26,7 @@ class Projects:
         :return: The response from the API call to get multiple projects.
         """
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
-        return self._request.get_request(url, self._secret['projects_headers'])
+        return self._request.get_request(url, self._secret['headers_with_content'])
 
     def create_a_project(self, project_name):
         """
@@ -35,7 +35,19 @@ class Projects:
         """
         body = ProjectEntity(project_name, self.MY_WORKSPACE)
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
-        return self._request.post_request(url, self._secret['projects_headers'], body.to_dict())
+        return self._request.post_request(url, self._secret['headers_with_content'], body.to_dict())
+
+    def delete_a_project(self, project_gid):
+        """
+        Deletes a project in the website.
+        Uses the project id (gid) to delete it.
+
+        :param project_gid: the id of the project to be deleted
+        :return: a response for the api request
+        """
+        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{project_gid}"
+        print(url)
+        return self._request.delete_request(url, self._secret['headers_without_content'])
 
     @staticmethod
     def projects_names(existing_projects):
@@ -44,3 +56,4 @@ class Projects:
         :return: all projects names in the received collection of projects.
         """
         return [project['name'] for project in existing_projects['data']]
+
