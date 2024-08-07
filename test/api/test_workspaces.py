@@ -37,3 +37,17 @@ class TestWorkspaces(unittest.TestCase):
         # Assert
         self.assertEqual(new_user.status, 200)
         self.assertIn(new_user_gid, workspace_user_gids)
+
+    def test_update_workspace_name(self):
+        # Arrange
+        new_workspace_name = Utils.generate_random_string()
+
+        # Act
+        updated_workspace = self.workspaces.update_a_workspace_name(new_workspace_name)
+        workspace_gid = updated_workspace.data["data"]["gid"]
+        workspace_details_after_updating = self.workspaces.get_workspace(workspace_gid)
+
+        # Assert
+        self.assertEqual(updated_workspace.status, 200)
+        self.assertEqual(workspace_details_after_updating.status, 200)
+        self.assertEqual(workspace_details_after_updating.data["data"]["name"], new_workspace_name)
