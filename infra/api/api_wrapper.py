@@ -12,3 +12,7 @@ class APIWrapper:
     @staticmethod
     def post_request(url, header=None, body=None):
         return requests.post(url, headers=header, json=body)
+
+    @staticmethod
+    def delete_request(url, header=None):
+        return requests.delete(url, headers=header)
