@@ -8,11 +8,11 @@ class APIWrapper:
         self._request = None
 
     @staticmethod
-    def get_request(url, header=None, json=None):
+    def get_request(url, headers=None, json=None):
         try:
             response = requests.get(
                 url,
-                headers=header,
+                headers=headers,
                 json=json
             )
             response.raise_for_status()
@@ -25,7 +25,6 @@ class APIWrapper:
 
     @staticmethod
     def post_request(url, headers=None, json=None):
-
         try:
             response = requests.post(
                 url,
@@ -41,5 +40,14 @@ class APIWrapper:
         return None
 
     @staticmethod
-    def delete_request(url, header=None):
-        return requests.delete(url, headers=header)
+    def delete_request(url, headers=None):
+        try:
+            response = requests.delete(url, headers=headers)
+            response.raise_for_status()
+            return ResponseWrapper(ok=response.ok, status=response.status_code, data=response.json())
+        except requests.exceptions.HTTPError as e:
+            print(f'HTTP error occurred: {e}')
+        except Exception as e:
+            print(f'Other error occurred: {e}')
+        return None
+
