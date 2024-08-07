@@ -8,9 +8,6 @@ from logic.api.users import Users
 
 
 class TestWorkspaces(unittest.TestCase):
-    """
-    A test case to retrieve multiple projects.
-    """
     def setUp(self):
         """
         Sets up the test cases by initializing necessary components.
@@ -22,6 +19,18 @@ class TestWorkspaces(unittest.TestCase):
         self.users = Users(self._api_request)
 
     def test_add_user_to_workspace(self):
+        """
+        Tests adding a new user to the workspace and verifying the user is added successfully.
+
+        The test performs the following steps:
+        1. Generates a random user email.
+        2. Adds the new user to the workspace.
+        3. Retrieves the list of users in the workspace.
+        4. Extracts the new user's global ID.
+        5. Extracts the list of user global IDs from the workspace.
+        6. Asserts that the new user was successfully added.
+        7. Asserts that the new user's global ID is in the list of user global IDs in the workspace.
+        """
         # Arrange
         new_user_name = f"{Utils.generate_random_string()}@gmail.com"
 
@@ -39,6 +48,16 @@ class TestWorkspaces(unittest.TestCase):
         self.assertIn(new_user_gid, workspace_user_gids)
 
     def test_update_workspace_name(self):
+        """
+        Tests updating the name of a workspace and verifying the update is successful.
+
+        The test performs the following steps:
+        1. Generates a random workspace name.
+        2. Updates the workspace with the new name.
+        3. Retrieves the updated workspace details.
+        4. Asserts that the workspace name update was successful.
+        5. Asserts that the retrieved workspace details match the updated name.
+        """
         # Arrange
         new_workspace_name = Utils.generate_random_string()
 

@@ -6,9 +6,6 @@ from logic.api.projects import Projects
 
 
 class TestProjects(unittest.TestCase):
-    """
-    A test case to retrieve multiple projects.
-    """
     def setUp(self):
         """
         Sets up the test cases by initializing necessary components.
@@ -19,7 +16,14 @@ class TestProjects(unittest.TestCase):
 
     def test_create_a_project(self):
         """
-        Test creating a new project and verifying it is added to the list of existing projects.
+        Tests creating a new project and verifying it is added to the list of existing projects.
+
+        The test performs the following steps:
+        1. Generates a random project name.
+        2. Creates a new project with the generated name.
+        3. Retrieves the list of existing projects.
+        4. Asserts that the new project was successfully created.
+        5. Asserts that the new project is in the list of existing projects.
         """
         # Arrange
         new_project_name = Utils.generate_random_string()
@@ -35,6 +39,17 @@ class TestProjects(unittest.TestCase):
                       f"{new_project_name} not found in existing projects.")
 
     def test_delete_project(self):
+        """
+        Tests deleting a project and verifying it is removed from the list of existing projects.
+
+        The test performs the following steps:
+        1. Generates a random project name.
+        2. Creates a new project with the generated name.
+        3. Deletes the created project.
+        4. Retrieves the list of existing projects.
+        5. Asserts that the new project was successfully created.
+        6. Asserts that the new project is not in the list of existing projects after deletion.
+        """
         # Arrange
         new_project_name = Utils.generate_random_string()
         new_project = self.projects.create_a_project(new_project_name)
