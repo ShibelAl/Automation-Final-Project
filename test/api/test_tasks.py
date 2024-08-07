@@ -6,7 +6,7 @@ from logic.api.projects import Projects
 from logic.api.tasks import Tasks
 
 
-class TestProjects(unittest.TestCase):
+class TestTasks(unittest.TestCase):
     def setUp(self):
         """
         Sets up the test cases by initializing necessary components.
@@ -19,6 +19,11 @@ class TestProjects(unittest.TestCase):
     def test_create_a_task(self):
         """
         Tests creating a new task and verifying it is added to the list of existing tasks.
+
+        Essential steps:
+        1. Create a new project.
+        2. Create a new task within the project.
+        3. Verify the task is in the list of existing tasks.
         """
         # Arrange
         new_project_name = Utils.generate_random_string()
@@ -40,6 +45,11 @@ class TestProjects(unittest.TestCase):
     def test_delete_a_task(self):
         """
         Tests deleting a task and verifying it is removed from the list of existing tasks.
+
+        Essential steps:
+        1. Create a new task.
+        2. Delete the task.
+        3. Verify the task is not in the list of existing tasks.
         """
         # Arrange
         new_project_name = Utils.generate_random_string()
