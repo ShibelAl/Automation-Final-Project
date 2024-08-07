@@ -51,3 +51,19 @@ class APIWrapper:
             print(f'Other error occurred: {e}')
         return None
 
+    @staticmethod
+    def put_request(url, headers=None, json=None):
+        try:
+            response = requests.put(
+                url,
+                headers=headers,
+                json=json
+            )
+            response.raise_for_status()
+            return ResponseWrapper(ok=response.ok, status=response.status_code, data=response.json())
+        except requests.exceptions.HTTPError as e:
+            print(f'HTTP error occurred: {e}')
+        except Exception as e:
+            print(f'Other error occurred: {e}')
+        return None
+
