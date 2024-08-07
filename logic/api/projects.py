@@ -46,7 +46,6 @@ class Projects:
         :return: a response for the api request
         """
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{project_gid}"
-        print(url)
         return self._request.delete_request(url, self._secret['headers_without_content'])
 
     @staticmethod
