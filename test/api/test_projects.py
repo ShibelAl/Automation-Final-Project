@@ -29,24 +29,24 @@ class TestProjects(unittest.TestCase):
         existing_projects = self.projects.get_multiple_projects()
 
         # Assert
-        self.assertEqual(new_project.status_code, 201)
-        self.assertEqual(existing_projects.status_code, 200)
-        self.assertIn(new_project_name, self.projects.projects_names(existing_projects.json()),
+        self.assertEqual(new_project.status, 201)
+        self.assertEqual(existing_projects.status, 200)
+        self.assertIn(new_project_name, self.projects.projects_names(existing_projects.data),
                       f"{new_project_name} not found in existing projects.")
 
     def test_delete_project(self):
         # Arrange
         new_project_name = Utils.generate_random_string()
         new_project = self.projects.create_a_project(new_project_name)
-        new_project_gid = new_project.json()["data"]["gid"]
+        new_project_gid = new_project.data["data"]["gid"]
 
         # Act
         deleting_a_project = self.projects.delete_a_project(int(new_project_gid))
         existing_projects = self.projects.get_multiple_projects()
 
         # Assert
-        self.assertEqual(new_project.status_code, 201)
-        self.assertEqual(existing_projects.status_code, 200)
-        self.assertEqual(deleting_a_project.status_code, 200)
-        self.assertNotIn(new_project_name, self.projects.projects_names(existing_projects.json()),
+        self.assertEqual(new_project.status, 201)
+        self.assertEqual(existing_projects.status, 200)
+        self.assertEqual(deleting_a_project.status, 200)
+        self.assertNotIn(new_project_name, self.projects.projects_names(existing_projects.data),
                          f"{new_project_name} not found in existing projects.")
