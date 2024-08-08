@@ -72,3 +72,28 @@ class Goals:
         :return: A list of goal names.
         """
         return [goal['name'] for goal in existing_goals['data']]
+
+    def delete_all_goals(self, workspace_gid):
+        """
+        Deletes all goals in the specified workspace.
+
+        :param workspace_gid: The unique identifier (GID) of the workspace from which to delete all goals.
+        :type workspace_gid: str
+
+        :return: A list of responses for each delete operation.
+        :rtype: list
+        """
+        response = self.get_goals(workspace_gid)
+        goals = response.data['data']
+
+        if not goals:
+            raise ValueError("No goals found in the specified workspace.")
+
+        delete_responses = []
+        for goal in goals:
+            goal_gid = goal['gid']
+            delete_response = self.delete_a_goal(goal_gid)
+            delete_responses.append(delete_response)
+
+        return delete_responses
+
