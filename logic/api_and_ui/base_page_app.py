@@ -10,6 +10,7 @@ class BasePageApp(BasePage):
     in the application's UI.
     """
     PROJECT_LIST = '//div[contains(@class, "projects")]//div[contains(@class, "RightClickMenu")]//a'
+    GOALS_BUTTON = '//span[text() = "Goals"]'
 
     def __init__(self, driver):
         """
@@ -48,3 +49,8 @@ class BasePageApp(BasePage):
             if project_name in project.get_attribute("aria-label"):
                 return False
         return True
+
+    def click_on_goals_button(self):
+        WebDriverWait(self._driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, self.GOALS_BUTTON))
+        ).click()
