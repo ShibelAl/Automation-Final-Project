@@ -1,5 +1,7 @@
 import logging
 import unittest
+
+from selenium.common import TimeoutException
 from logic.ui.login_page import LoginPage
 from infra.config_provider import ConfigProvider
 from infra.ui.browser_wrapper import BrowserWrapper
@@ -40,3 +42,36 @@ class TestLoginPage(unittest.TestCase):
         WebDriverWait(self.driver, 10).until(ec.url_to_be(self.HOME_PAGE_URL))
         # Assert
         self.assertEqual(self.driver.current_url, self.HOME_PAGE_URL)
+
+    def test_wrong_password_in_login(self):
+        """
+        This function tests if when inserting a correct email and wrong password,
+        then the login page prevents entering the website, as it should.
+        """
+        logging.info("Test wrong password in login - test started")
+        # Arrange
+        login_page = LoginPage(self.driver)
+        # Act
+        login_page.login_flow(self.config["email"], self.secret["wrong_password"])
+        try:
+            WebDriverWait(self.driver, 5).until(ec.url_to_be("https://app.asana.com/0/home/1207765960679158"))
+        except TimeoutException:
+            # Assert
+            self.assertNotEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
+
+    def test_wrong_email_in_login(self):
+        """
+        This function tests if when inserting a wrong email, then
+        the login page prevents entering the website, as it should.
+        """
+        logging.info("Test wrong email in login - test started")
+        # Arrange
+        login_page = LoginPage(self.driver)
+        # Act
+        login_page.fill_email_input(self.config["wrong_email"])
+        login_page.click_on_continue_button()
+        try:
+            WebDriverWait(self.driver, 5).until(ec.url_to_be("https://app.asana.com/0/home/1207765960679158"))
+        except TimeoutException:
+            # Assert
+            self.assertNotEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
