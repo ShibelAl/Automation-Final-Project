@@ -31,7 +31,7 @@ class TestGoals(unittest.TestCase):
         except ValueError as e:
             # Print an error message if no goals are found
             if str(e) == "No goals found in the specified workspace.":
-                print("No goals to delete in the workspace.")
+                print("tearDownClass - No goals to delete in the workspace.")
             else:
                 # Re-raise any unexpected exceptions
                 raise
