@@ -1,7 +1,7 @@
 import random
 
 
-class Utils:
+class LogicUtils:
     """
     Utility class for logic and test functions.
     """
