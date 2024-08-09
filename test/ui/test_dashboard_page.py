@@ -21,7 +21,7 @@ class TestDashboardPage(unittest.TestCase):
         self.secret = ConfigProvider.load_secret_json()
         self.driver = self.browser.get_driver(self.config["base_url"])
         self.login_page = LoginPage(self.driver)
-        self.login_page.login_flow(self.config["email"], self.secret["password"])
+        self.login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
         self.sidebar = SideBar(self.driver)
         self.sidebar.click_on_reporting_button()
         self.reporting_page = ReportingPage(self.driver)

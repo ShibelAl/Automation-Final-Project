@@ -52,7 +52,7 @@ class TestLoginPage(unittest.TestCase):
         # Arrange
         login_page = LoginPage(self.driver)
         # Act
-        login_page.login_flow(self.config["email"], self.secret["wrong_password"])
+        login_page.login_flow(self.config["asana_email"], self.config["wrong_password"])
         try:
             WebDriverWait(self.driver, 5).until(ec.url_to_be("https://app.asana.com/0/home/1207765960679158"))
         except TimeoutException:

@@ -20,7 +20,7 @@ class TestNewMessagePopUp(unittest.TestCase):
         self.secret = ConfigProvider.load_secret_json()
         self.driver = self.browser.get_driver(self.config["base_url"])
         self.login_page = LoginPage(self.driver)
-        self.login_page.login_flow(self.config["email"], self.secret["password"])
+        self.login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
         self.base_page_app = BasePageApp(self.driver)
         self.base_page_app.click_on_create_button()
         self.base_page_app.click_on_message_button_in_create()
@@ -40,7 +40,7 @@ class TestNewMessagePopUp(unittest.TestCase):
         """
         logging.info("Test sent message title is visible - test started")
         # Arrange
-        self.message_popup.add_message_receiver_email(self.config["email"])
+        self.message_popup.add_message_receiver_email(self.config["asana_email"])
         # Act
         self.message_popup.fill_add_subject_field(Utils.generate_random_string())
         self.message_popup.fill_message_content(Utils.generate_random_string())
@@ -56,7 +56,7 @@ class TestNewMessagePopUp(unittest.TestCase):
         """
         logging.info("Test sent message title is correct - test started")
         # Arrange
-        self.message_popup.add_message_receiver_email(self.config["email"])
+        self.message_popup.add_message_receiver_email(self.config["asana_email"])
         subject = Utils.generate_random_string()
         # Act
         self.message_popup.fill_add_subject_field(subject)
