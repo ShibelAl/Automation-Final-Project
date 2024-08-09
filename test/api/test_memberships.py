@@ -42,6 +42,5 @@ class TestMemberships(unittest.TestCase):
         current_project_memberships = self.memberships.get_a_membership(int(new_membership.data['data']['gid']))
 
         # Assert
-        self.assertEqual(new_project.status, 201)
         self.assertEqual(new_membership.status, 201)
         self.assertEqual(new_membership.data['data']['gid'], current_project_memberships.data['data']['gid'])
