@@ -1,7 +1,7 @@
 import logging
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support import expected_conditions as EC
 from infra.ui.base_page import BasePage
 
 
@@ -38,7 +38,7 @@ class LoginPage(BasePage):
         :param password: a parameter that is represents the password in the login page.
         """
         WebDriverWait(self._driver, 5).until(
-            ec.presence_of_element_located((By.XPATH, self.ASANA_PASSWORD_INPUT))
+            EC.presence_of_element_located((By.XPATH, self.ASANA_PASSWORD_INPUT))
         ).send_keys(password)
 
     def click_on_login_button(self):
@@ -46,7 +46,7 @@ class LoginPage(BasePage):
         Clicks on the login button after filling the password.
         """
         WebDriverWait(self._driver, 5).until(
-            ec.element_to_be_clickable((By.XPATH, self.ASANA_LOGIN_BUTTON))
+            EC.element_to_be_clickable((By.XPATH, self.ASANA_LOGIN_BUTTON))
         ).click()
 
     def login_flow(self, email, password):
