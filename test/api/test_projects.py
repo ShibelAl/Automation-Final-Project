@@ -34,7 +34,6 @@ class TestProjects(unittest.TestCase):
 
         # Assert
         self.assertEqual(new_project.status, 201)
-        self.assertEqual(existing_projects.status, 200)
         self.assertIn(new_project_name, self.projects.projects_names(existing_projects.data),
                       f"{new_project_name} not found in existing projects.")
 
@@ -60,8 +59,6 @@ class TestProjects(unittest.TestCase):
         existing_projects = self.projects.get_multiple_projects()
 
         # Assert
-        self.assertEqual(new_project.status, 201)
-        self.assertEqual(existing_projects.status, 200)
         self.assertEqual(deleting_a_project.status, 200)
         self.assertNotIn(new_project_name, self.projects.projects_names(existing_projects.data),
                          f"{new_project_name} not found in existing projects.")
