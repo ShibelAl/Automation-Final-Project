@@ -67,11 +67,11 @@ class TestGoals(unittest.TestCase):
 
         # Act
         deleting_a_goal = self.goals.delete_a_goal(int(new_goal_gid))
-        existing_projects = self.goals.get_goals(self._config['my_workspace_gid'])
+        existing_goals = self.goals.get_goals(self._config['my_workspace_gid'])
 
         # Assert
         self.assertEqual(deleting_a_goal.status, 200)
-        self.assertNotIn(new_goal_name, self.goals.goals_names(existing_projects.data),
+        self.assertNotIn(new_goal_name, self.goals.goals_names(existing_goals.data),
                          f"{new_goal_name} found in existing projects after deletion.")
 
     def test_update_a_goal(self):
