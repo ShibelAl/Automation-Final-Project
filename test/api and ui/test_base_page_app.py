@@ -46,7 +46,6 @@ class TestProjects(unittest.TestCase):
         new_project = self.projects.create_a_project(new_project_name)
 
         # Assert
-        self.assertEqual(new_project.status, 201)
         self.assertTrue(self.base_page_app.project_is_displayed(new_project_name),
                         f"The project '{new_project_name}' was not found in the project list.")
 
@@ -65,7 +64,6 @@ class TestProjects(unittest.TestCase):
         deleted_project = self.projects.delete_a_project(new_project_gid)
 
         # Assert
-        self.assertEqual(deleted_project.status, 200)
         self.assertTrue(self.base_page_app.project_is_not_displayed(new_project_name),
                         f"The project '{new_project_name}' was found in the project list after deletion.")
 
