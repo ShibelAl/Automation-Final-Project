@@ -10,14 +10,13 @@ class NewProjectPage(BasePage):
 
     def __init__(self, driver):
         super().__init__(driver)
-        self._blank_project_button = WebDriverWait(self._driver, self.WAIT_TIME).until(
-            EC.presence_of_element_located((By.XPATH, self.BLANK_PROJECT_BUTTON))
-        )
 
     def click_on_blank_project_button(self):
         """
         Clicks on the "Blank project" button.
         """
-        self._blank_project_button.click()
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
+            EC.element_to_be_clickable((By.XPATH, self.BLANK_PROJECT_BUTTON))
+        ).click()
         WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.url_to_be("https://app.asana.com/0/projects/new/blank"))
