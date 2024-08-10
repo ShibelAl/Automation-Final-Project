@@ -8,5 +8,9 @@
 
   "my_workspace_gid" : "1207971857090881",
   "default_workspace_member" : "shibel alsheikh",
-  "goals_page_url" : "https://app.asana.com/0/goals/1207971857090891/list?v=1.0&view_mode=domain_level&expanded_goals=1208012701796846"
+  "goals_page_url" : "https://app.asana.com/0/goals/1207971857090891/list?v=1.0&view_mode=domain_level&expanded_goals=1208012701796846",
+
+  "jira_url" : "https://sybl85850.atlassian.net/",
+  "jira_email" : "sybl85850@gmail.com",
+  "jira_key" : "KAN"
 }
