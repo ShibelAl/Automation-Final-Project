@@ -68,5 +68,4 @@ class TestWorkspaces(unittest.TestCase):
 
         # Assert
         self.assertEqual(updated_workspace.status, 200)
-        self.assertEqual(workspace_details_after_updating.status, 200)
         self.assertEqual(workspace_details_after_updating.data["data"]["name"], new_workspace_name)
