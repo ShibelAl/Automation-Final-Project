@@ -76,7 +76,7 @@ class TestGoals(unittest.TestCase):
         # Assert
         self.assertTrue(self._goals_page.goal_is_displayed())
 
-    def test_create_and_delete_a_goal(self):
+    def test_delete_a_goal(self):
         """
         Tests the creation and deletion of a goal via the API and verifies its absence in the UI.
 
@@ -101,7 +101,7 @@ class TestGoals(unittest.TestCase):
         # Assert
         self.assertTrue(self._goals_page.goal_is_not_displayed())
 
-    def test_create_and_update_a_goal(self):
+    def test_update_a_goal(self):
         """
         Tests the creation and updating of a goal via the API and verifies the updated goal name in the UI.
 

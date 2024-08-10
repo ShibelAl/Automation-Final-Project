@@ -49,7 +49,7 @@ class TestProjects(unittest.TestCase):
         self.assertTrue(self.base_page_app.project_is_displayed(new_project_name),
                         f"The project '{new_project_name}' was not found in the project list.")
 
-    def test_create_and_delete_a_project(self):
+    def test_delete_a_project(self):
         """
         Tests creating and deleting a project and verifying it is removed from the list of existing projects.
         """
