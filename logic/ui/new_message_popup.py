@@ -18,6 +18,7 @@ class NewMessagePopUp(BasePageApp):
     CLOSE_NEW_MESSAGE_POPUP_BUTTON = '//div[@class = "FocusTrap"]//div[@aria-label = "Close"]'
     CLOSE_DRAFT_MESSAGE_BUTTON = '//div[contains(@class, "collapsed")]//div[@aria-label = "Close"]'
     DELETE_BUTTON_CLOSING_DRAFT = '//div[text() = "Delete message"]'
+    WAIT_TIME = 20
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -28,7 +29,7 @@ class NewMessagePopUp(BasePageApp):
         This function fills the subject/title of the message with the parameter "subject"
         :param subject: a string that represents the subject of the message.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.presence_of_element_located((By.XPATH, self.ADD_SUBJECT))
         ).send_keys(subject)
 
@@ -37,7 +38,7 @@ class NewMessagePopUp(BasePageApp):
         Inserts the email of the receiver of the message using the "email" parameter.
         :param email: a string that represents the email of the receiver.
         """
-        self._message_receiver = WebDriverWait(self._driver, 10).until(
+        self._message_receiver = WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.presence_of_element_located((By.XPATH, self.TO_INPUT_FIELD))
         )
         self._message_receiver.send_keys(email)
@@ -48,7 +49,7 @@ class NewMessagePopUp(BasePageApp):
         Fills the message content - the body of the message, using the message parameter.
         :param message: a string that represents the message to be sent.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.presence_of_element_located((By.XPATH, self.MESSAGE_BODY))
         ).send_keys(message)
         time.sleep(1)  # Allow time for the action to complete and UI to update
@@ -57,7 +58,7 @@ class NewMessagePopUp(BasePageApp):
         """
         Clicks on "send" button to send the message.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.element_to_be_clickable((By.XPATH, self.SEND_BUTTON))
         ).click()
         logging.info("clicked on send button")
@@ -68,7 +69,7 @@ class NewMessagePopUp(BasePageApp):
         Clicks on the link that shows in a pop-up after sending a message, after pressing
         on it, the user should see the message that he has sent.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.presence_of_element_located((By.XPATH, self.VIEW_MESSAGE_LINK))
         ).click()
         logging.info("clicked on view message link")
@@ -79,7 +80,7 @@ class NewMessagePopUp(BasePageApp):
         that shows the user the message he has sent.
         :return: True, if the message title is visible, False otherwise.
         """
-        return WebDriverWait(self._driver, 10).until(
+        return WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.visibility_of_element_located((By.XPATH, self.TITLE_FIELD_IN_VIEW_MESSAGE_MODE))
         ).is_displayed()
 
@@ -87,7 +88,7 @@ class NewMessagePopUp(BasePageApp):
         """
         :return: The title of the message as text.
         """
-        return WebDriverWait(self._driver, 10).until(
+        return WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.visibility_of_element_located((By.XPATH, self.TITLE_FIELD_IN_VIEW_MESSAGE_MODE))
         ).text
 
@@ -95,7 +96,7 @@ class NewMessagePopUp(BasePageApp):
         """
         Closes the message pop-up by clicking on the x sign.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.element_to_be_clickable((By.XPATH, self.CLOSE_NEW_MESSAGE_POPUP_BUTTON))
         ).click()
 
@@ -103,7 +104,7 @@ class NewMessagePopUp(BasePageApp):
         """
         Clicks on the "To" field, in order to fill it with the input afterward.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.presence_of_element_located((By.XPATH, self.TO_INPUT_FIELD))
         ).click()
 
