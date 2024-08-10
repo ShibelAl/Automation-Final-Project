@@ -7,10 +7,11 @@ from infra.ui.base_page import BasePage
 
 class BasePageApp(BasePage):
     CREATE_BUTTON = '//div[@aria-label = "Create"]'
-    PROJECT_BUTTON_IN_CREATE = '//div[@class = "MenuItemA11y Omnibutton-menuItem Omnibutton-project"]'
+    PROJECT_BUTTON_IN_CREATE = '//span[contains(@class, "LeftIconItemStructure-label") and text() = "Project"]'
     MESSAGE_BUTTON_IN_CREATE = '//span[text() = "Message"]'
     BLANK_PROJECT_BUTTON = '//div[@class = "DashedTile DashedTile--large FlowPickerTile-dashedTile"]'
     POP_UP_AFTER_PRESSING_CREATE = '//div[contains(@class, "LayerPositioner-layer")]'
+    WAIT_TIME = 20
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -19,8 +20,8 @@ class BasePageApp(BasePage):
         """
         Clicks on Create button.
         """
-        WebDriverWait(self._driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, self.CREATE_BUTTON))
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
+            EC.element_to_be_clickable((By.XPATH, self.CREATE_BUTTON))
         ).click()
 
     def click_on_project_button_in_create(self):
@@ -28,8 +29,8 @@ class BasePageApp(BasePage):
         Clicks on project button. This button appears after pressing
         on Create.
         """
-        WebDriverWait(self._driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, self.PROJECT_BUTTON_IN_CREATE))
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
+            EC.element_to_be_clickable((By.XPATH, self.PROJECT_BUTTON_IN_CREATE))
         ).click()
 
     def click_on_message_button_in_create(self):
@@ -37,7 +38,7 @@ class BasePageApp(BasePage):
         Click on message button. This button appears after pressing
         on Create.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.element_to_be_clickable((By.XPATH, self.MESSAGE_BUTTON_IN_CREATE))
         ).click()
 
@@ -55,7 +56,7 @@ class BasePageApp(BasePage):
         appears after pressing on Create.
         :return: True, if the small pop-up appears after pressing on Create. False otherwise.
         """
-        return WebDriverWait(self._driver, 10).until(
+        return WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.visibility_of_element_located((By.XPATH, self.POP_UP_AFTER_PRESSING_CREATE))
         ).is_displayed()
 
@@ -65,6 +66,6 @@ class BasePageApp(BasePage):
         This button should appear after pressing on Create -> Project.
         :return: True, if the "Blank project" button appears, False otherwise.
         """
-        return WebDriverWait(self._driver, 10).until(
+        return WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.presence_of_element_located((By.XPATH, self.BLANK_PROJECT_BUTTON))
         ).is_displayed()

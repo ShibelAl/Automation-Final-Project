@@ -7,7 +7,8 @@ from infra.ui.base_page import BasePage
 
 class ReportingPage(BasePage):
     CREATE_BUTTON = '//div[@class = "DomainDashboardIndexToolbar"]//div[@aria-haspopup = "menu"]'
-    DASHBOARD_BUTTON_IN_CREATE = '//div[@class = "MenuItemA11y"]'
+    DASHBOARD_BUTTON_IN_CREATE = '//div[contains(@class, "ThemeableItemBackgroundStructure--isHighlighted")]'
+    WAIT_TIME = 20
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -16,7 +17,7 @@ class ReportingPage(BasePage):
         """
         Clicks on "Create" button to create a new dashboard.
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.element_to_be_clickable((By.XPATH, self.CREATE_BUTTON))
         ).click()
 
@@ -24,7 +25,7 @@ class ReportingPage(BasePage):
         """
         Clicks on "Dashboard" button. This button appears after pressing on "Create".
         """
-        WebDriverWait(self._driver, 10).until(
+        WebDriverWait(self._driver, self.WAIT_TIME).until(
             EC.element_to_be_clickable((By.XPATH, self.DASHBOARD_BUTTON_IN_CREATE))
         ).click()
 
