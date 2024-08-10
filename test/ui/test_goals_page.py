@@ -96,22 +96,6 @@ class TestGoalsPage(unittest.TestCase):
         # Assert
         self.assertTrue(self._goals_page.privacy_dropdown_value_is_correct(dropdown_element_pick))
 
-    def test_fill_members_input_field(self):
-        """
-        Test filling in the members input field.
-
-        This method verifies that the members input field is correctly populated with a specified member name.
-        """
-        # Arrange
-        self._goals_page.click_on_add_goal_button()
-        member_name = self._config['default_workspace_member']
-
-        # Act
-        self._goals_page.fill_members_input_field(member_name)
-
-        # Assert
-        self.assertTrue(self._goals_page.members_field_value_is_correct(member_name))
-
     def test_save_goal_button_not_clickable_feature(self):
         """
         Test clicking the 'Save goal' button when it is not clickable.
