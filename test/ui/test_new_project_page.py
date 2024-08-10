@@ -17,7 +17,7 @@ class TestNewProjectPage(unittest.TestCase):
         self.browser = BrowserWrapper()
         self.config = ConfigProvider.load_config_json()
         self.secret = ConfigProvider.load_secret_json()
-        self.driver = self.browser.get_driver(self.config["base_url"])
+        self.driver = self.browser.get_driver(self.config["base_url_app"])
         self.login_page = LoginPage(self.driver)
         self.login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
         self.base_page_app = BasePageApp(self.driver)
