@@ -1,11 +1,12 @@
 # Asana Web Application Testing
 
-This project involves testing the Asana web application using both UI and API methods. It includes automation scripts and API requests to ensure the functionality and performance of the Asana application.
+Welcome to the Asana Web Application Testing project! This project ensures that the Asana web application performs seamlessly through comprehensive UI, API, and combined API+UI testing. Asana is a leading project management platform that helps teams organize, track, and manage their work efficiently.
 
 ## Project Overview
 
 - **UI Testing**: Using Selenium WebDriver to automate interactions with the Asana website.
 - **API Testing**: Using the Asana REST API to validate API endpoints and responses.
+- **Combined API+UI Testing**: Integrates both UI and API testing to ensure that all components work together flawlessly, delivering a complete and smooth user experience.
 
 ## API Documentation
 
@@ -24,7 +25,7 @@ The Asana web application can be accessed at: [Asana Home](https://app.asana.com
    - Logging
    - Pytest-html
    - Jira
-   - Any other required libraries listed in `requirements.txt`
+
 
 2. **Configuration**:
    - Ensure you have a valid Asana API token.
@@ -65,7 +66,7 @@ The Asana web application can be accessed at: [Asana Home](https://app.asana.com
      ```bash
      cd test/"api and ui"
      ```
-   - Run the API+UI test scripts.
+   - Run the API+UI test scripts. These tests involve performing actions via the API and then asserting that the results are reflected correctly in the UI.
 
 ## Reporting
 
@@ -85,6 +86,9 @@ Test results and reports are generated using various formats:
 - **API Tests**:
   - Validate API endpoints and response data.
   - Ensure proper error handling and data integrity.
+
+- **API+UI Tests**:
+  - Perform actions via the API and assert that these actions and their results are accurately reflected in the UI, ensuring end-to-end functionality and consistency.
 
 ## Notes
 
