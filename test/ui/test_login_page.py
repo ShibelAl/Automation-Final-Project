@@ -7,6 +7,7 @@ from infra.config_provider import ConfigProvider
 from infra.ui.browser_wrapper import BrowserWrapper
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from infra.jira_handler import JiraHandler
 
 
 class TestLoginPage(unittest.TestCase):
@@ -57,7 +58,12 @@ class TestLoginPage(unittest.TestCase):
             WebDriverWait(self.driver, 5).until(ec.url_to_be("https://app.asana.com/0/home/1207765960679158"))
         except TimeoutException:
             # Assert
-            self.assertNotEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
+            try:
+                self.assertNotEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
+            except AssertionError:
+                jira_handler = JiraHandler()
+                jira_handler.create_issue(self.config['jira_key'], "test_each_job_has_all_fields", "hi")
+                raise AssertionError("assertion error")
 
     def test_wrong_email_in_login(self):
         """
@@ -74,4 +80,9 @@ class TestLoginPage(unittest.TestCase):
             WebDriverWait(self.driver, 5).until(ec.url_to_be("https://app.asana.com/0/home/1207765960679158"))
         except TimeoutException:
             # Assert
-            self.assertNotEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
+            try:
+                self.assertNotEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
+            except AssertionError:
+                jira_handler = JiraHandler()
+                jira_handler.create_issue(self.config['jira_key'], "test_each_job_has_all_fields", "hi")
+                raise AssertionError("assertion error")
