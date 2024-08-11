@@ -91,7 +91,7 @@ class GoalsPageExpanded(GoalsPage):
             ec.presence_of_all_elements_located((By.XPATH, self.PRIVACY_DROPDOWN_ELEMENTS))
         )[index].click()
 
-    def privacy_dropdown_value_is_correct(self, value):
+    def privacy_dropdown_value_is_displayed(self, value):
         """
         Checks if the selected privacy value is correct (Public or Private).
 
