@@ -62,7 +62,7 @@ class TestLoginPage(unittest.TestCase):
                 self.assertNotEqual(self.driver.current_url, "https://app.asana.com/0/home/1207765960679158")
             except AssertionError:
                 jira_handler = JiraHandler()
-                jira_handler.create_issue(self.config['jira_key'], "test_each_job_has_all_fields", "hi")
+                jira_handler.create_issue(self.config['jira_key'], "test_wrong_password_in_login", "hi")
                 raise AssertionError("assertion error")
 
     def test_wrong_email_in_login(self):

@@ -1,5 +1,6 @@
 import unittest
 
+from infra.jira_handler import JiraHandler
 from infra.ui.browser_wrapper import BrowserWrapper
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
@@ -26,6 +27,7 @@ class TestGoals(unittest.TestCase):
         self._browser = BrowserWrapper()
         self._config = ConfigProvider.load_config_json()
         self._secret = ConfigProvider.load_secret_json()
+        self.jira_handler = JiraHandler()
         self._driver = self._browser.get_driver(self._config["base_url_app"])
         self._login_page = LoginPage(self._driver)
         self._login_page.login_flow(self._config["asana_email"], self._secret["asana_password"])
@@ -34,6 +36,7 @@ class TestGoals(unittest.TestCase):
         self._api_request = APIWrapper()
         self._goals = Goals(self._api_request)
         self._time_periods = TimePeriods(self._api_request)
+
 
     def tearDown(self):
         """
@@ -125,7 +128,12 @@ class TestGoals(unittest.TestCase):
         self._goals.update_a_goal(initial_goal_gid, new_goal_name, self._config['my_workspace_gid'])
 
         # Assert
-        self.assertTrue(self._goals_page.is_goal_name(new_goal_name))
+        try:
+            self.assertTrue(self._goals_page.is_goal_name(new_goal_name))
+        except AssertionError:
+            self.jira_handler.create_issue(self._config['jira_key'], "test_update_a_goal",
+                                           "bug when trying to update a goal name")
+            raise AssertionError("assertion error")
 
 
 if __name__ == '__main__':
