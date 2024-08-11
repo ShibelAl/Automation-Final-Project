@@ -1,4 +1,6 @@
 import unittest
+import logging
+from infra.logging_setup import LoggingSetup  # it appears not used, without it logging fails
 
 from infra.jira_handler import JiraHandler
 from infra.ui.browser_wrapper import BrowserWrapper
@@ -36,7 +38,6 @@ class TestGoals(unittest.TestCase):
         self._api_request = APIWrapper()
         self._goals = Goals(self._api_request)
         self._time_periods = TimePeriods(self._api_request)
-
 
     def tearDown(self):
         """
@@ -77,7 +78,12 @@ class TestGoals(unittest.TestCase):
         self._goals.create_a_goal(new_goal_name, self._config['my_workspace_gid'], time_period)
 
         # Assert
-        self.assertTrue(self._goals_page.goal_is_displayed())
+        try:
+            self.assertTrue(self._goals_page.goal_is_displayed())
+        except AssertionError:
+            self.jira_handler.create_issue(self._config['jira_key'], "test_create_a_goal",
+                                           "bug when trying to create a goal")
+            raise AssertionError("assertion error")
 
     def test_delete_a_goal(self):
         """
@@ -102,9 +108,14 @@ class TestGoals(unittest.TestCase):
         self._goals.delete_a_goal(int(new_goal_gid))
 
         # Assert
-        self.assertTrue(self._goals_page.goal_is_not_displayed())
+        try:
+            self.assertTrue(self._goals_page.goal_is_not_displayed())
+        except AssertionError:
+            self.jira_handler.create_issue(self._config['jira_key'], "test_delete_a_goal",
+                                           "bug when trying to delete a goal")
+            raise AssertionError("assertion error")
 
-    def test_update_a_goal(self):
+    def test_update_goal_name(self):
         """
         Tests the creation and updating of a goal via the API and verifies the updated goal name in the UI.
 
@@ -115,6 +126,7 @@ class TestGoals(unittest.TestCase):
         4. Update the goal name using the API.
         5. Verify that the goal name in the UI is updated to the new name.
         """
+        logging.info("Test update a goal - Test started")
         # Arrange
         self._base_page_app.click_on_goals_button()
 
@@ -126,12 +138,12 @@ class TestGoals(unittest.TestCase):
 
         # Act
         self._goals.update_a_goal(initial_goal_gid, new_goal_name, self._config['my_workspace_gid'])
-
+        logging.info("Updated the goal name")
         # Assert
         try:
             self.assertTrue(self._goals_page.is_goal_name(new_goal_name))
         except AssertionError:
-            self.jira_handler.create_issue(self._config['jira_key'], "test_update_a_goal",
+            self.jira_handler.create_issue(self._config['jira_key'], "test_update_goal_name",
                                            "bug when trying to update a goal name")
             raise AssertionError("assertion error")
 
