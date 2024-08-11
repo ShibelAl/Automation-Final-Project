@@ -1,8 +1,6 @@
 import unittest
-import logging
-from infra.logging_setup import LoggingSetup  # it appears not used, without it logging fails
-
 from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from infra.ui.browser_wrapper import BrowserWrapper
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
@@ -18,7 +16,6 @@ class TestGoals(unittest.TestCase):
     """
     Test class for validating the creation, deletion, and updating of goals within a project using Asana's UI and API.
     """
-
     def setUp(self):
         """
         Sets up the test environment before each test.
@@ -58,6 +55,7 @@ class TestGoals(unittest.TestCase):
                 raise
         self._driver.quit()
 
+    @TestFailureHandler.handle_test_failure
     def test_create_a_goal(self):
         """
         Tests the creation of a new goal via the API and verifies its presence in the UI.
@@ -68,9 +66,8 @@ class TestGoals(unittest.TestCase):
         3. Create the goal using the API.
         4. Verify that the new goal is displayed in the UI.
         """
-        # Assert
+        # Arrange
         self._base_page_app.click_on_goals_button()
-
         new_goal_name = Utils.generate_random_string()
         time_period = self._time_periods.get_random_time_period(self._config['my_workspace_gid'])
 
@@ -78,13 +75,9 @@ class TestGoals(unittest.TestCase):
         self._goals.create_a_goal(new_goal_name, self._config['my_workspace_gid'], time_period)
 
         # Assert
-        try:
-            self.assertTrue(self._goals_page.goal_is_displayed())
-        except AssertionError:
-            self.jira_handler.create_issue(self._config['jira_key'], "test_create_a_goal",
-                                           "bug when trying to create a goal")
-            raise AssertionError("assertion error")
+        self.assertTrue(self._goals_page.goal_is_displayed())
 
+    @TestFailureHandler.handle_test_failure
     def test_delete_a_goal(self):
         """
         Tests the creation and deletion of a goal via the API and verifies its absence in the UI.
@@ -98,7 +91,6 @@ class TestGoals(unittest.TestCase):
         """
         # Arrange
         self._base_page_app.click_on_goals_button()
-
         new_goal_name = Utils.generate_random_string()
         time_period = self._time_periods.get_random_time_period(self._config['my_workspace_gid'])
         new_goal = self._goals.create_a_goal(new_goal_name, self._config['my_workspace_gid'], time_period)
@@ -108,13 +100,9 @@ class TestGoals(unittest.TestCase):
         self._goals.delete_a_goal(int(new_goal_gid))
 
         # Assert
-        try:
-            self.assertTrue(self._goals_page.goal_is_not_displayed())
-        except AssertionError:
-            self.jira_handler.create_issue(self._config['jira_key'], "test_delete_a_goal",
-                                           "bug when trying to delete a goal")
-            raise AssertionError("assertion error")
+        self.assertTrue(self._goals_page.goal_is_not_displayed())
 
+    @TestFailureHandler.handle_test_failure
     def test_update_goal_name(self):
         """
         Tests the creation and updating of a goal via the API and verifies the updated goal name in the UI.
@@ -126,10 +114,8 @@ class TestGoals(unittest.TestCase):
         4. Update the goal name using the API.
         5. Verify that the goal name in the UI is updated to the new name.
         """
-        logging.info("Test update a goal - Test started")
         # Arrange
         self._base_page_app.click_on_goals_button()
-
         initial_goal_name = Utils.generate_random_string()
         time_period = self._time_periods.get_random_time_period(self._config['my_workspace_gid'])
         initial_goal = self._goals.create_a_goal(initial_goal_name, self._config['my_workspace_gid'], time_period)
@@ -138,14 +124,9 @@ class TestGoals(unittest.TestCase):
 
         # Act
         self._goals.update_a_goal(initial_goal_gid, new_goal_name, self._config['my_workspace_gid'])
-        logging.info("Updated the goal name")
+
         # Assert
-        try:
-            self.assertTrue(self._goals_page.is_goal_name(new_goal_name))
-        except AssertionError:
-            self.jira_handler.create_issue(self._config['jira_key'], "test_update_goal_name",
-                                           "bug when trying to update a goal name")
-            raise AssertionError("assertion error")
+        self.assertTrue(self._goals_page.is_goal_name(new_goal_name))
 
 
 if __name__ == '__main__':

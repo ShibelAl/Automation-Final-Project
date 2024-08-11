@@ -1,5 +1,6 @@
 import unittest
-
+from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from infra.ui.browser_wrapper import BrowserWrapper
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
@@ -14,12 +15,12 @@ class TestProjects(unittest.TestCase):
     This class contains test cases for creating and deleting projects,
     and verifying their presence in the UI.
     """
-
     def setUp(self):
         """
         Sets up the test cases by initializing necessary components.
         """
         self.browser = BrowserWrapper()
+        self.jira_handler = JiraHandler()
         self.config = ConfigProvider.load_config_json()
         self.secret = ConfigProvider.load_secret_json()
         self.driver = self.browser.get_driver(self.config["base_url_app"])
@@ -35,6 +36,7 @@ class TestProjects(unittest.TestCase):
         """
         self.driver.quit()
 
+    @TestFailureHandler.handle_test_failure
     def test_create_a_project(self):
         """
         Tests creating a new project and verifying it is added to the list of existing projects.
@@ -49,6 +51,7 @@ class TestProjects(unittest.TestCase):
         self.assertTrue(self.base_page_app.project_is_displayed(new_project_name),
                         f"The project '{new_project_name}' was not found in the project list.")
 
+    @TestFailureHandler.handle_test_failure
     def test_delete_a_project(self):
         """
         Tests creating and deleting a project and verifying it is removed from the list of existing projects.

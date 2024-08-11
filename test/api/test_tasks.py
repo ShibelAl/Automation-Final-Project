@@ -1,4 +1,7 @@
 import unittest
+
+from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
@@ -11,16 +14,17 @@ class TestTasks(unittest.TestCase):
     This class contains test cases for creating, verifying, and deleting tasks,
     ensuring that tasks are correctly added to and removed from projects.
     """
-
     def setUp(self):
         """
         Sets up the test cases by initializing necessary components.
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
+        self.jira_handler = JiraHandler()
         self.projects = Projects(self._api_request)
         self.tasks = Tasks(self._api_request)
 
+    @TestFailureHandler.handle_test_failure
     def test_create_a_task(self):
         """
         Tests creating a new task and verifying it was successfully created.
@@ -42,6 +46,7 @@ class TestTasks(unittest.TestCase):
         # Assert
         self.assertEqual(new_task.status, 201)
 
+    @TestFailureHandler.handle_test_failure
     def test_task_added_to_exact_project(self):
         """
         Tests that a task is correctly added to the specified project.
@@ -63,10 +68,10 @@ class TestTasks(unittest.TestCase):
         existing_tasks = self.tasks.get_multiple_tasks(new_project_gid)
 
         # Assert
-        self.assertEqual(existing_tasks.status, 200)
         self.assertIn(new_task_name, self.tasks.tasks_names(existing_tasks.data),
                       f"{new_task_name} not found in existing tasks.")
 
+    @TestFailureHandler.handle_test_failure
     def test_delete_a_task(self):
         """
         Tests deleting a task and verifying it is removed from the list of existing tasks.

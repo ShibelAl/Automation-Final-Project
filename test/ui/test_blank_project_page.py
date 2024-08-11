@@ -1,5 +1,6 @@
-import logging
 import unittest
+from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from logic.ui.login_page import LoginPage
 from infra.config_provider import ConfigProvider
 from infra.ui.browser_wrapper import BrowserWrapper
@@ -16,6 +17,7 @@ class TestNewProjectPage(unittest.TestCase):
         and creates a new blank project. Works automatically.
         """
         self.browser = BrowserWrapper()
+        self.jira_handler = JiraHandler()
         self.config = ConfigProvider.load_config_json()
         self.secret = ConfigProvider.load_secret_json()
         self.driver = self.browser.get_driver(self.config["base_url_app"])
@@ -33,14 +35,16 @@ class TestNewProjectPage(unittest.TestCase):
         """
         self.driver.quit()
 
+    @TestFailureHandler.handle_test_failure
     def test_header_project_name_appears(self):
         """
         This function tests if the project name appears in the project template header.
         """
-        logging.info("Test header project name - test started")
         # Arrange
         blank_project_page = BlankProjectPage(self.driver)
+
         # Act
         blank_project_page.fill_project_name_input()
+
         # Assert
         self.assertTrue(blank_project_page.project_name_is_displayed())

@@ -1,4 +1,6 @@
 import unittest
+from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
@@ -14,10 +16,12 @@ class TestMemberships(unittest.TestCase):
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
+        self.jira_handler = JiraHandler()
         self.projects = Projects(self._api_request)
         self.workspaces = Workspaces(self._api_request)
         self.memberships = Memberships(self._api_request)
 
+    @TestFailureHandler.handle_test_failure
     def test_create_a_membership(self):
         """
         Tests the creation of a membership by performing the following steps:

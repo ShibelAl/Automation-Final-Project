@@ -1,5 +1,7 @@
-import logging
 import unittest
+
+from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from logic.ui.login_page import LoginPage
 from infra.config_provider import ConfigProvider
 from infra.ui.browser_wrapper import BrowserWrapper
@@ -17,6 +19,7 @@ class TestDashboardPage(unittest.TestCase):
         and creates a new blank project. Works automatically.
         """
         self.browser = BrowserWrapper()
+        self.jira_handler = JiraHandler()
         self.config = ConfigProvider.load_config_json()
         self.secret = ConfigProvider.load_secret_json()
         self.driver = self.browser.get_driver(self.config["base_url_app"])
@@ -34,13 +37,13 @@ class TestDashboardPage(unittest.TestCase):
         """
         self.driver.quit()
 
+    @TestFailureHandler.handle_test_failure
     def test_drag_and_drop_feature(self):
         """
         This function tests the drag and drop feature in the dashboard
         page, it uses the "get_chart_location" function that returns the
         location of the element (chart) in the page.
         """
-        logging.info("Test drag and drop feature - test started")
         # Arrange
         self.dashboard_page = DashboardPage(self.driver)
         self.dashboard_page.add_two_charts_flow()

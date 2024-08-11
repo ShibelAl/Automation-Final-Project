@@ -1,4 +1,6 @@
 import unittest
+from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
@@ -12,8 +14,10 @@ class TestProjects(unittest.TestCase):
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
+        self.jira_handler = JiraHandler()
         self.projects = Projects(self._api_request)
 
+    @TestFailureHandler.handle_test_failure
     def test_create_a_project(self):
         """
         Tests creating a new project and verifying it is added to the list of existing projects.
@@ -37,6 +41,7 @@ class TestProjects(unittest.TestCase):
         self.assertIn(new_project_name, self.projects.projects_names(existing_projects.data),
                       f"{new_project_name} not found in existing projects.")
 
+    @TestFailureHandler.handle_test_failure
     def test_delete_project(self):
         """
         Tests deleting a project and verifying it is removed from the list of existing projects.

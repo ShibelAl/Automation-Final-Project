@@ -1,5 +1,6 @@
 import unittest
-
+from infra.test_failure_handler import TestFailureHandler
+from infra.jira_handler import JiraHandler
 from infra.api.api_wrapper import APIWrapper
 from logic.api.goals import Goals
 from logic.api_and_ui.base_page_app import BasePageApp
@@ -24,6 +25,7 @@ class TestGoalsPage(unittest.TestCase):
         self._browser = BrowserWrapper()
         self._config = ConfigProvider.load_config_json()
         self._secret = ConfigProvider.load_secret_json()
+        self.jira_handler = JiraHandler()
         self._driver = self._browser.get_driver(self._config["base_url_app"])
         self._login_page = LoginPage(self._driver)
         self._login_page.login_flow(self._config["asana_email"], self._secret["asana_password"])
@@ -52,6 +54,7 @@ class TestGoalsPage(unittest.TestCase):
                 raise
         self._driver.quit()
 
+    @TestFailureHandler.handle_test_failure
     def test_click_on_add_goal_button(self):
         """
         Test the functionality of clicking the 'Add goal' button.
@@ -64,6 +67,7 @@ class TestGoalsPage(unittest.TestCase):
         # Assert
         self.assertTrue(self._goals_page.is_new_goal_panel_displayed())
 
+    @TestFailureHandler.handle_test_failure
     def test_fill_goal_title_input(self):
         """
         Test filling in the goal title input field.
@@ -80,6 +84,7 @@ class TestGoalsPage(unittest.TestCase):
         # Assert
         self.assertTrue(self._goals_page.goal_title_value_is_visible(goal_title))
 
+    @TestFailureHandler.handle_test_failure
     def test_privacy_dropdown(self):
         """
         Test selecting an option from the privacy dropdown.
@@ -94,8 +99,9 @@ class TestGoalsPage(unittest.TestCase):
         self._goals_page.select_privacy_dropdown_by_index(dropdown_element_pick)
 
         # Assert
-        self.assertTrue(self._goals_page.privacy_dropdown_value_is_correct(dropdown_element_pick))
+        self.assertTrue(self._goals_page.privacy_dropdown_value_is_displayed(dropdown_element_pick))
 
+    @TestFailureHandler.handle_test_failure
     def test_save_goal_button_not_clickable_feature(self):
         """
         Test clicking the 'Save goal' button when it is not clickable.
@@ -112,6 +118,7 @@ class TestGoalsPage(unittest.TestCase):
         # Assert
         self.assertEqual(self._driver.current_url, self._config['goals_page_url'])
 
+    @TestFailureHandler.handle_test_failure
     def test_create_goal_flow(self):
         """
         Test the complete goal creation flow - the goal is assigned to the default workspace

@@ -1,4 +1,6 @@
 import unittest
+from infra.jira_handler import JiraHandler
+from infra.test_failure_handler import TestFailureHandler
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
@@ -14,6 +16,7 @@ class TestGoals(unittest.TestCase):
         """
         cls._config = ConfigProvider.load_config_json()
         cls._api_request = APIWrapper()
+        cls.jira_handler = JiraHandler()
         cls.goals = Goals(cls._api_request)
         cls.time_periods = TimePeriods(cls._api_request)
 
@@ -36,6 +39,7 @@ class TestGoals(unittest.TestCase):
                 # Re-raise any unexpected exceptions
                 raise
 
+    @TestFailureHandler.handle_test_failure
     def test_create_a_goal(self):
         """
         Tests the creation of a new goal and verifies that the goal is successfully created
@@ -54,6 +58,7 @@ class TestGoals(unittest.TestCase):
         self.assertIn(new_goal_name, self.goals.goals_names(existing_goals.data),
                       f"{new_goal_name} not found in existing projects.")
 
+    @TestFailureHandler.handle_test_failure
     def test_delete_a_goal(self):
         """
         Tests the deletion of a goal and verifies that the goal is successfully deleted
@@ -74,6 +79,7 @@ class TestGoals(unittest.TestCase):
         self.assertNotIn(new_goal_name, self.goals.goals_names(existing_goals.data),
                          f"{new_goal_name} found in existing projects after deletion.")
 
+    @TestFailureHandler.handle_test_failure
     def test_update_a_goal(self):
         """
         Tests the update of an existing goal's name and verifies that the name is successfully updated.

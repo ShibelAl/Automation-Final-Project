@@ -1,5 +1,7 @@
 import unittest
+from infra.test_failure_handler import TestFailureHandler
 from infra.utils import Utils
+from infra.jira_handler import JiraHandler
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
 from logic.api.workspaces import Workspaces
@@ -14,10 +16,12 @@ class TestWorkspaces(unittest.TestCase):
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
+        self.jira_handler = JiraHandler()
         self.workspaces = Workspaces(self._api_request)
         self.projects = Projects(self._api_request)
         self.users = Users(self._api_request)
 
+    @TestFailureHandler.handle_test_failure
     def test_add_user_to_workspace(self):
         """
         Tests adding a new user to the workspace and verifying the user is added successfully.
@@ -47,6 +51,7 @@ class TestWorkspaces(unittest.TestCase):
         self.assertEqual(new_user.status, 200)
         self.assertIn(new_user_gid, workspace_user_gids)
 
+    @TestFailureHandler.handle_test_failure
     def test_update_workspace_name(self):
         """
         Tests updating the name of a workspace and verifying the update is successful.
