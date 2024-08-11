@@ -55,7 +55,7 @@ class GoalsPage(BasePageApp):
         :return: True if the goal name matches, False otherwise.
         """
         try:
-            goal_name_element = WebDriverWait(self._driver, 10).until(
+            goal_name_element = WebDriverWait(self._driver, self.WAIT_TIME).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 f"{self.GOAL_NAME_CONTAINER} and text()='{goal_name}']"))
             )
