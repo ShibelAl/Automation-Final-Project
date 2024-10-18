@@ -1,13 +1,11 @@
 from infra.config_provider import ConfigProvider
-from logic.api.entities.workspace_user import WorkspaceUserEntity
 from logic.api.entities.workspace import WorkspaceEntity
+from logic.api.entities.workspace_user import WorkspaceUserEntity
 
 
 class Workspaces:
-    REQUEST_URL_ENDPOINT = "workspaces"
-    ADD_USER_PATH_PARAM = "/1207971857090881/addUser?opt_fields="
-    UPDATE_WORKSPACE_PATH_PARAM = "/1207971857090881"
-    # MY_WORKSPACE = "1207971857090881"
+    URL_ENDPOINT = "workspaces/"
+    PATH_PARAM = "/addUser"
 
     def __init__(self, request):
         """
@@ -21,14 +19,15 @@ class Workspaces:
 
     def add_a_user_to_workspace(self, user_name):
         request_body = WorkspaceUserEntity(user_name)
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.ADD_USER_PATH_PARAM}"
+        url = (f"{self._config['base_url_api']}{self.URL_ENDPOINT}{self._config['my_workspace_gid']}"
+               f"{self.PATH_PARAM}")
         return self._request.post_request(url, self._secret['headers_without_content'], request_body.to_dict())
 
     def update_a_workspace_name(self, workspace_name):
         request_body = WorkspaceEntity(workspace_name)
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.UPDATE_WORKSPACE_PATH_PARAM}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}{self._config['my_workspace_gid']}"
         return self._request.put_request(url, self._secret['headers_with_content'], request_body.to_dict())
 
     def get_workspace(self, workspace_gid):
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{workspace_gid}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}{workspace_gid}"
         return self._request.get_request(url, self._secret['headers_without_content'])

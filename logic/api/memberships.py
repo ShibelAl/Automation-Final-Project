@@ -3,7 +3,7 @@ from logic.api.entities.membership import MembershipEntity
 
 
 class Memberships:
-    REQUEST_URL_ENDPOINT = "memberships"
+    URL_ENDPOINT = "memberships"
 
     def __init__(self, request):
         """
@@ -24,7 +24,7 @@ class Memberships:
         :return: The response from the API call to add a membership.
         """
         request_body = MembershipEntity(project_gid, user_gid)
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}"
         return self._request.post_request(url, self._secret['headers_with_content'], request_body.to_dict())
 
     def get_a_membership(self, membership_gid):
@@ -34,5 +34,5 @@ class Memberships:
         :param membership_gid: The global ID of the membership.
         :return: The response from the API call to get the membership details.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{membership_gid}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}/{membership_gid}"
         return self._request.get_request(url, self._secret['headers_without_content'])

@@ -1,10 +1,12 @@
 from infra.config_provider import ConfigProvider
-from logic.api.entities.user import UserEntity
 
 
 class Users:
-    REQUEST_URL_ENDPOINT = "users?workspace=1207971857090881"
-    MY_WORKSPACE = "1207971857090881"
+    """
+    A class to handle users-related operations.
+    """
+    URL_ENDPOINT = "users"
+    QUERY_PARAM = "?workspace="
 
     def __init__(self, request):
         """
@@ -17,7 +19,8 @@ class Users:
         self._secret = ConfigProvider().load_secret_json()
 
     def get_workspace_users(self):
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
+        url = (f"{self._config['base_url_api']}"
+               f"{self.URL_ENDPOINT}{self.QUERY_PARAM}{self._config['my_workspace_gid']}")
         return self._request.get_request(url, self._secret['headers_without_content'])
 
     @staticmethod

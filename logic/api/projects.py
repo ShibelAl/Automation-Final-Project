@@ -6,7 +6,7 @@ class Projects:
     """
     A class to handle projects-related operations, like creating, updating and deleting projects.
     """
-    REQUEST_URL_ENDPOINT = "projects"
+    URL_ENDPOINT = "projects"
 
     def __init__(self, request):
         """
@@ -24,7 +24,7 @@ class Projects:
 
         :return: The response from the API call to get multiple projects.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}"
         return self._request.get_request(url, self._secret['headers_with_content'])
 
     def create_a_project(self, project_name):
@@ -33,7 +33,7 @@ class Projects:
         The new project comes with a random name consists of 12 letters.
         """
         body = ProjectEntity(project_name, self._config['my_workspace_gid'])
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}"
         return self._request.post_request(url, self._secret['headers_with_content'], body.to_dict())
 
     def delete_a_project(self, project_gid):
@@ -44,7 +44,7 @@ class Projects:
         :param project_gid: the id of the project to be deleted
         :return: a response for the api request
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{project_gid}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}/{project_gid}"
         return self._request.delete_request(url, self._secret['headers_without_content'])
 
     @staticmethod

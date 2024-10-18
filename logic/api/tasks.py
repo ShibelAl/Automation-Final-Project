@@ -6,7 +6,7 @@ class Tasks:
     """
     A class to handle tasks-related operations, such as creating, updating, and deleting tasks.
     """
-    REQUEST_URL_ENDPOINT = "tasks"
+    URL_ENDPOINT = "tasks"
     QUERY_PARAM = "?project="
 
     def __init__(self, request):
@@ -28,7 +28,7 @@ class Tasks:
         :return: The response from the API call to create the task.
         """
         body = TaskEntity(task_name, project_gid)
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}"
         return self._request.post_request(url, self._secret['headers_with_content'], body.to_dict())
 
     def get_multiple_tasks(self, project_gid):
@@ -38,7 +38,7 @@ class Tasks:
         :param project_gid: The global ID of the project for which to retrieve tasks.
         :return: The response from the API call to get the tasks.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.QUERY_PARAM}{project_gid}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}{self.QUERY_PARAM}{project_gid}"
         return self._request.get_request(url, self._secret['headers_without_content'])
 
     def delete_a_task(self, task_gid):
@@ -48,7 +48,7 @@ class Tasks:
         :param task_gid: The global ID of the task to be deleted.
         :return: The response from the API call to delete the task.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{task_gid}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}/{task_gid}"
         return self._request.delete_request(url, self._secret['headers_without_content'])
 
     @staticmethod

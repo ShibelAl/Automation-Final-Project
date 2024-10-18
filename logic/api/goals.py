@@ -6,7 +6,7 @@ class Goals:
     """
     A class to handle goals-related operations, such as creating, updating, and deleting goals.
     """
-    REQUEST_URL_ENDPOINT = "goals"
+    URL_ENDPOINT = "goals"
     QUERY_PARAM = "?workspace="
 
     def __init__(self, request):
@@ -26,7 +26,7 @@ class Goals:
         :param workspace: The workspace identifier for which to retrieve goals.
         :return: A response object containing the list of goals.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.QUERY_PARAM}{workspace}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}{self.QUERY_PARAM}{workspace}"
         return self._request.get_request(url, self._secret['headers_without_content'])
 
     def create_a_goal(self, goal_name, workspace, time_period):
@@ -39,7 +39,7 @@ class Goals:
         :return: A response object from the goal creation request.
         """
         body = GoalEntity(goal_name, workspace, time_period)
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}"
         return self._request.post_request(url, self._secret['headers_with_content'], body.to_dict())
 
     def delete_a_goal(self, goal_gid):
@@ -49,7 +49,7 @@ class Goals:
         :param goal_gid: The unique identifier of the goal to be deleted.
         :return: A response object from the goal deletion request.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{goal_gid}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}/{goal_gid}"
         return self._request.delete_request(url, self._secret['headers_without_content'])
 
     def update_a_goal(self, goal_gid, goal_name, workspace):
@@ -62,7 +62,7 @@ class Goals:
         :return: A response object from the goal update request.
         """
         body = GoalEntity(goal_name, workspace)
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}/{goal_gid}"
+        url = f"{self._config['base_url_api']}{self.URL_ENDPOINT}/{goal_gid}"
         return self._request.put_request(url, self._secret['headers_with_content'], body.to_dict())
 
     @staticmethod

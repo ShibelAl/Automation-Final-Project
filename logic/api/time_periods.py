@@ -7,9 +7,7 @@ class TimePeriods:
     A class to interact with time periods within a workspace.
     """
     REQUEST_URL_ENDPOINT = "time_periods"
-    WORKSPACE_QUERY = "?workspace="
-    OPT_FIELDS = "&opt_fields="
-    MY_WORKSPACE = "1207971857090881"
+    QUERY_PARAM = "?workspace="
 
     def __init__(self, request):
         """
@@ -28,7 +26,7 @@ class TimePeriods:
         :param workspace_gid: The unique identifier (GID) of the workspace for which to retrieve time periods.
         :return: The API response containing the list of time periods for the given workspace.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.WORKSPACE_QUERY}{workspace_gid}"
+        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.QUERY_PARAM}{workspace_gid}"
         return self._request.get_request(url, self._secret['headers_without_content'])
 
     def get_random_time_period(self, workspace):
