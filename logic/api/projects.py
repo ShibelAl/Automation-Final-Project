@@ -7,7 +7,6 @@ class Projects:
     A class to handle projects-related operations, like creating, updating and deleting projects.
     """
     REQUEST_URL_ENDPOINT = "projects"
-    MY_WORKSPACE = "1207971857090881"
 
     def __init__(self, request):
         """
@@ -33,7 +32,7 @@ class Projects:
         Creates a new project in the website.
         The new project comes with a random name consists of 12 letters.
         """
-        body = ProjectEntity(project_name, self.MY_WORKSPACE)
+        body = ProjectEntity(project_name, self._config['my_workspace_gid'])
         url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}"
         return self._request.post_request(url, self._secret['headers_with_content'], body.to_dict())
 
@@ -55,4 +54,3 @@ class Projects:
         :return: all projects names in the received collection of projects.
         """
         return [project['name'] for project in existing_projects['data']]
-
