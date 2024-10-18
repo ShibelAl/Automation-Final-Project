@@ -8,14 +8,42 @@ from logic.api.projects import Projects
 
 
 class TestProjects(unittest.TestCase):
-    def setUp(self):
+
+    @classmethod
+    def setUpClass(cls):
         """
         Sets up the test cases by initializing necessary components.
         """
-        self._config = ConfigProvider.load_config_json()
-        self._api_request = APIWrapper()
-        self.jira_handler = JiraHandler()
-        self.projects = Projects(self._api_request)
+        cls._config = ConfigProvider.load_config_json()
+        cls._api_request = APIWrapper()
+        cls._jira_handler = JiraHandler()
+        cls._projects = Projects(cls._api_request)
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Cleans up the test environment by deleting the most recently created project.
+        Fetches all projects in the workspace and deletes the first one in the list.
+        """
+        try:
+            # Fetch all projects
+            existing_projects = cls._projects.get_multiple_projects()
+            if not existing_projects.data['data']:
+                print("tearDownClass - No projects found to delete.")
+                return
+
+            # Assume the first project is the one created in the test (if only one project was created)
+            first_project_gid = existing_projects.data['data'][0]['gid']
+
+            # Attempt to delete the first project
+            deleting_a_project = cls._projects.delete_a_project(first_project_gid)
+            if deleting_a_project.status == 200:
+                print(f"tearDownClass - Successfully deleted project with gid: {first_project_gid}")
+            else:
+                print(f"tearDownClass - Failed to delete project. Status: {deleting_a_project.status}")
+
+        except Exception as e:
+            print(f"tearDownClass - Exception occurred while deleting project: {e}")
 
     @TestFailureHandler.handle_test_failure
     def test_create_a_project(self):
@@ -33,12 +61,12 @@ class TestProjects(unittest.TestCase):
         new_project_name = Utils.generate_random_string()
 
         # Act
-        new_project = self.projects.create_a_project(new_project_name)
-        existing_projects = self.projects.get_multiple_projects()
+        new_project = self._projects.create_a_project(new_project_name)
+        existing_projects = self._projects.get_multiple_projects()
 
         # Assert
         self.assertEqual(new_project.status, 201)
-        self.assertIn(new_project_name, self.projects.projects_names(existing_projects.data),
+        self.assertIn(new_project_name, self._projects.projects_names(existing_projects.data),
                       f"{new_project_name} not found in existing projects.")
 
     @TestFailureHandler.handle_test_failure
@@ -56,14 +84,14 @@ class TestProjects(unittest.TestCase):
         """
         # Arrange
         new_project_name = Utils.generate_random_string()
-        new_project = self.projects.create_a_project(new_project_name)
+        new_project = self._projects.create_a_project(new_project_name)
         new_project_gid = new_project.data["data"]["gid"]
 
         # Act
-        deleting_a_project = self.projects.delete_a_project(int(new_project_gid))
-        existing_projects = self.projects.get_multiple_projects()
+        deleting_a_project = self._projects.delete_a_project(int(new_project_gid))
+        existing_projects = self._projects.get_multiple_projects()
 
         # Assert
         self.assertEqual(deleting_a_project.status, 200)
-        self.assertNotIn(new_project_name, self.projects.projects_names(existing_projects.data),
+        self.assertNotIn(new_project_name, self._projects.projects_names(existing_projects.data),
                          f"{new_project_name} not found in existing projects.")
