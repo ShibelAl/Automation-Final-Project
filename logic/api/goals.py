@@ -3,9 +3,11 @@ from logic.api.entities.goal import GoalEntity
 
 
 class Goals:
+    """
+    A class to handle goals-related operations, such as creating, updating, and deleting goals.
+    """
     REQUEST_URL_ENDPOINT = "goals"
-    URL_QUERY = "?workspace="
-    MY_WORKSPACE = "1207971857090881"
+    QUERY_PARAM = "?workspace="
 
     def __init__(self, request):
         """
@@ -24,7 +26,7 @@ class Goals:
         :param workspace: The workspace identifier for which to retrieve goals.
         :return: A response object containing the list of goals.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.URL_QUERY}{workspace}"
+        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.QUERY_PARAM}{workspace}"
         return self._request.get_request(url, self._secret['headers_without_content'])
 
     def create_a_goal(self, goal_name, workspace, time_period):
@@ -96,4 +98,3 @@ class Goals:
             delete_responses.append(delete_response)
 
         return delete_responses
-

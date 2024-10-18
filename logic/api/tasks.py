@@ -7,8 +7,7 @@ class Tasks:
     A class to handle tasks-related operations, such as creating, updating, and deleting tasks.
     """
     REQUEST_URL_ENDPOINT = "tasks"
-    GET_TASKS_ENDPOINT = "?project="
-    MY_WORKSPACE = "1207971857090881"
+    QUERY_PARAM = "?project="
 
     def __init__(self, request):
         """
@@ -39,7 +38,7 @@ class Tasks:
         :param project_gid: The global ID of the project for which to retrieve tasks.
         :return: The response from the API call to get the tasks.
         """
-        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.GET_TASKS_ENDPOINT}{project_gid}"
+        url = f"{self._config['base_url_api']}{self.REQUEST_URL_ENDPOINT}{self.QUERY_PARAM}{project_gid}"
         return self._request.get_request(url, self._secret['headers_without_content'])
 
     def delete_a_task(self, task_gid):
