@@ -1,14 +1,14 @@
 {
   "browser": "Chrome",
   "base_url_api": "https://app.asana.com/api/1.0/",
-  "base_url_app" : "https://app.asana.com/-/login",
-  "asana_email" : "shibel0123@gmail.com",
+  "base_url_app" : "https://app.asana.com/0/home/1208618423911405",
+  "asana_email" : "shibelal500@gmail.com",
   "wrong_email" : "a_wrong_email@gmail.com",
   "wrong_password" : "a_wrong_password",
 
-  "my_workspace_gid" : "1207765960679148",
+  "my_workspace_gid" : "1208618423911390",
   "default_workspace_member" : "shibel alsheikh",
-  "goals_page_url" : "https://app.asana.com/0/goals/1207776171874822/list?v=1.0&view_mode=domain_level",
+  "goals_page_url" : "https://app.asana.com/0/goals/1208618423911405/list?v=1.0&view_mode=domain_level",
 
   "jira_url" : "https://shibel0123.atlassian.net/",
   "jira_email" : "shibel0123@gmail.com",
