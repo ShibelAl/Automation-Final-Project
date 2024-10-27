@@ -1,6 +1,6 @@
 import unittest
 from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
+from infra.jira_bug_reporter import TestFailureHandler
 from infra.ui.browser_wrapper import BrowserWrapper
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
