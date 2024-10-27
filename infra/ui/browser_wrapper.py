@@ -1,6 +1,13 @@
+import logging
 from selenium import webdriver
+from selenium.webdriver import ChromeOptions
+from selenium.webdriver import EdgeOptions
+from selenium.webdriver import FirefoxOptions
 from infra.config_provider import ConfigProvider
-from selenium.common.exceptions import *
+from selenium.common.exceptions import WebDriverException
+from infra.logging_setup import LoggingSetup  # Ensure logging is properly set up
+
+LoggingSetup()
 
 
 class BrowserWrapper:
@@ -12,18 +19,34 @@ class BrowserWrapper:
     def get_driver(self, url):
         try:
             if self.config["browser"] == "Chrome":
-                self._driver = webdriver.Chrome()
-            elif self.config["browser"] == "FireFox":
-                self._driver = webdriver.Firefox()
-            elif self.config["browser"] == "Edge":
-                self._driver = webdriver.Edge()
+                chrome_options = ChromeOptions()
+                chrome_options.add_argument(self.config["logged_in_google_chrome_path"])
 
+                self._driver = webdriver.Chrome(options=chrome_options)
+
+            elif self.config["browser"] == "Edge":
+                edge_options = EdgeOptions()
+                edge_options.add_argument(self.config["logged_in_microsoft_edge_path"])
+
+                self._driver = webdriver.Edge(options=edge_options)
+
+            elif self.config["browser"] == "Firefox":
+                firefox_options = FirefoxOptions()
+                firefox_options.profile = self.config["logged_in_firefox_path"]
+
+                self._driver = webdriver.Firefox(options=firefox_options)
+
+            # open the provided URL
             self._driver.get(url)
             self._driver.maximize_window()
             return self._driver
-        except WebDriverException as e:
-            print("Could not find web driver:", e)
+
+        except WebDriverException:
+            logging.error("Could not load web driver")
+
+        except AttributeError:
+            logging.error("Web driver name is not valid")
 
     def close_browser(self):
-        self._driver.quit()
-        print("Test done")
+        if self._driver:
+            self._driver.quit()
