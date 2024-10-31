@@ -1,9 +1,8 @@
 import unittest
 from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
-from logic.ui.login_page import LoginPage
-from infra.config_provider import ConfigProvider
+from infra.jira_bug_reporter import JiraBugReporter
 from infra.ui.browser_wrapper import BrowserWrapper
+from infra.config_provider import ConfigProvider
 from logic.ui.base_page_app import BasePageApp
 from logic.ui.new_project_page import NewProjectPage
 from logic.ui.blank_project_page import BlankProjectPage
@@ -14,15 +13,13 @@ class TestNewProjectPage(unittest.TestCase):
     def setUp(self):
         """
         Sets up the testing environment, completes the login process to enter to the main page,
-        and creates a new blank project. Works automatically.
+        and creates a new blank project.
         """
         self.browser = BrowserWrapper()
         self.jira_handler = JiraHandler()
         self.config = ConfigProvider.load_config_json()
         self.secret = ConfigProvider.load_secret_json()
         self.driver = self.browser.get_driver(self.config["base_url_app"])
-        self.login_page = LoginPage(self.driver)
-        self.login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
         self.base_page_app = BasePageApp(self.driver)
         self.base_page_app.open_new_project()
         self.new_project_page = NewProjectPage(self.driver)
@@ -31,12 +28,16 @@ class TestNewProjectPage(unittest.TestCase):
     def tearDown(self):
         """
         Closes the browser after completing the test.
-        Works automatically.
         """
-        self.driver.quit()
+        self.browser.close_browser()
 
-    @TestFailureHandler.handle_test_failure
-    def test_header_project_name_appears(self):
+    @JiraBugReporter.report_bug(
+        description="After typing the name of the project in the blank project template, it should appear in the "
+                    "template header, but it didn't appear.",
+        priority="Medium",
+        labels=["UI", "Project"]
+    )
+    def test_blank_project_header_text_appears(self):
         """
         This function tests if the project name appears in the project template header.
         """
