@@ -1,11 +1,14 @@
 import logging
 import traceback
-from infra.logging_setup import LoggingSetup  # Ensure logging is properly set up
+from infra.logging_setup import LoggingSetup
+from infra.jira_handler import JiraHandler
 
 LoggingSetup()
 
 
 class JiraBugReporter:
+    _jira_handler = JiraHandler()
+
     @staticmethod
     def report_bug(description=None, priority="Medium", labels=None, components=None):
         """
@@ -27,8 +30,8 @@ class JiraBugReporter:
                     # log the error
                     logging.error(f"{test_name} - assertion error")
 
-                    # report the issue to JIRA
-                    self.jira_handler.create_bug_issue(
+                    # report the issue to jira
+                    JiraBugReporter._jira_handler.create_bug_issue(
                         project_key=self._config['jira_key'],
                         summary=f"Test Failure: {test_name}",
                         description=issue_description,
