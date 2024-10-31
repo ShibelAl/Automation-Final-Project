@@ -4,10 +4,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from logic.api_and_ui.goals_page import GoalsPage
+from infra.config_provider import ConfigProvider
 
 
 class GoalsPageExpanded(GoalsPage):
-    WAIT_TIME = 20
     ADD_GOAL_BUTTON = '//div[text() = "Add goal"]'
     NEW_GOAL_PANEL = '//div[contains(@class, "ModalPaneWithBuffer-pane")]'
     GOAL_TITLE_INPUT = '//input[@id = "create_goal_dialog_name_input"]'
@@ -28,12 +28,13 @@ class GoalsPageExpanded(GoalsPage):
         """
         super().__init__(driver)
         self._privacy_dropdown = None
+        self._config = ConfigProvider.load_config_json()
 
     def click_on_add_goal_button(self):
         """
         Clicks the 'Add goal' button to start the process of adding a new goal.
         """
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.element_to_be_clickable((By.XPATH, self.ADD_GOAL_BUTTON))
         ).click()
 
@@ -43,7 +44,7 @@ class GoalsPageExpanded(GoalsPage):
 
         :return: True if the new goal panel is displayed, False otherwise.
         """
-        return WebDriverWait(self._driver, self.WAIT_TIME).until(
+        return WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.NEW_GOAL_PANEL))
         ).is_displayed()
 
@@ -53,7 +54,7 @@ class GoalsPageExpanded(GoalsPage):
 
         :param goal_title: The title to set for the new goal.
         """
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.GOAL_TITLE_INPUT))
         ).send_keys(goal_title)
 
@@ -65,7 +66,7 @@ class GoalsPageExpanded(GoalsPage):
         :return: True if the goal title is visible, False otherwise.
         """
         try:
-            goal_title_value = WebDriverWait(self._driver, self.WAIT_TIME).until(
+            goal_title_value = WebDriverWait(self._driver, self._config["wait_time"]).until(
                 ec.presence_of_element_located((By.XPATH, f"{self.GOAL_TITLE_INPUT_VALUE}'{goal_title}']"))
             )
             return goal_title_value.is_displayed()
@@ -76,7 +77,7 @@ class GoalsPageExpanded(GoalsPage):
         """
         Clicks the privacy dropdown to reveal the privacy options.
         """
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.element_to_be_clickable((By.XPATH, self.PRIVACY_DROPDOWN))
         ).click()
 
@@ -87,7 +88,7 @@ class GoalsPageExpanded(GoalsPage):
         :param index: The index of the option to select.
         """
         self.click_on_privacy_dropdown()
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_all_elements_located((By.XPATH, self.PRIVACY_DROPDOWN_ELEMENTS))
         )[index].click()
 
@@ -101,7 +102,7 @@ class GoalsPageExpanded(GoalsPage):
         value = "Public" if value == 0 else "Private"
 
         try:
-            privacy_dropdown_value = WebDriverWait(self._driver, self.WAIT_TIME).until(
+            privacy_dropdown_value = WebDriverWait(self._driver, self._config["wait_time"]).until(
                 ec.presence_of_element_located((By.XPATH, f"{self.PRIVACY_DROPDOWN_VALUE}'{value}']"))
             )
             return privacy_dropdown_value.is_displayed()
@@ -114,13 +115,13 @@ class GoalsPageExpanded(GoalsPage):
 
         :param member: The member name to add to the goal.
         """
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.MEMBERS_INPUT_FIELD))
         ).click()
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.MEMBERS_INPUT_FIELD))
         ).send_keys(member)
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.MEMBERS_INPUT_FIELD))
         ).send_keys(Keys.RETURN)
 
@@ -132,7 +133,7 @@ class GoalsPageExpanded(GoalsPage):
         :return: True if the member name is correct, False otherwise.
         """
         try:
-            members_field_value = WebDriverWait(self._driver, self.WAIT_TIME).until(
+            members_field_value = WebDriverWait(self._driver, self._config["wait_time"]).until(
                 ec.presence_of_element_located((By.XPATH, f"{self.MEMBERS_INPUT_FIELD_VALUE}'{member}']"))
             )
             return members_field_value.is_displayed()
@@ -143,7 +144,7 @@ class GoalsPageExpanded(GoalsPage):
         """
         Clicks the 'Save goal' button to save the new goal.
         """
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.element_to_be_clickable((By.XPATH, self.SAVE_GOAL_BUTTON))
         ).click()
 
@@ -151,7 +152,7 @@ class GoalsPageExpanded(GoalsPage):
         """
         Attempts to click the 'Save goal' button even if it is not clickable.
         """
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.SAVE_GOAL_BUTTON))
         ).click()
 
