@@ -1,5 +1,6 @@
 import logging
 import traceback
+from infra.config_provider import ConfigProvider
 from infra.logging_setup import LoggingSetup
 from infra.jira_handler import JiraHandler
 
@@ -8,6 +9,7 @@ LoggingSetup()
 
 class JiraBugReporter:
     _jira_handler = JiraHandler()
+    _config = ConfigProvider().load_config_json()
 
     @staticmethod
     def report_bug(description=None, priority="Medium", labels=None, components=None):
@@ -32,7 +34,7 @@ class JiraBugReporter:
 
                     # report the issue to jira
                     JiraBugReporter._jira_handler.create_bug_issue(
-                        project_key=self._config['jira_key'],
+                        project_key=JiraBugReporter._config['jira_key'],
                         summary=f"Test Failure: {test_name}",
                         description=issue_description,
                         priority=priority,
