@@ -1,16 +1,23 @@
 {
-  "browser": "Chrome",
+  "browser": "Edge",
+  "logged_in_google_chrome_path": "user-data-dir=C:/Users/shibe/AppData/Local/Google/Chrome/User Data",
+  "logged_in_microsoft_edge_path": "user-data-dir=C:/Users/shibe/AppData/Local/Microsoft/Edge/User Data",
+  "logged_in_firefox_path": "C:/Users/shibe/AppData/Roaming/Mozilla/Firefox/Profiles/o8mclk18.default-release-1",
+
   "base_url_api": "https://app.asana.com/api/1.0/",
-  "base_url_app" : "https://app.asana.com/0/home/1208618423911405",
-  "asana_email" : "shibelal500@gmail.com",
-  "wrong_email" : "a_wrong_email@gmail.com",
-  "wrong_password" : "a_wrong_password",
+  "base_url_app": "https://app.asana.com/0/home/1208618423911405",
+  "asana_email": "shibelal500@gmail.com",
+  "wrong_email": "a_wrong_email@gmail.com",
+  "wrong_password": "a_wrong_password",
 
-  "my_workspace_gid" : "1208618423911390",
-  "default_workspace_member" : "shibel alsheikh",
-  "goals_page_url" : "https://app.asana.com/0/goals/1208618423911405/list?v=1.0&view_mode=domain_level",
+  "my_workspace_gid": "1208618423911390",
+  "default_workspace_member": "shibel alsheikh",
+  "goals_page_url": "https://app.asana.com/0/goals/1208618423911405/list?v=1.0&view_mode=domain_level",
 
-  "jira_url" : "https://shibelal500.atlassian.net/",
-  "jira_email" : "shibelal500@gmail.com",
-  "jira_key" : "DP"
+  "jira_url": "https://shibelal500.atlassian.net/",
+  "jira_email": "shibelal500@gmail.com",
+  "jira_key": "DP",
+
+  "wait_time": 7,
+  "ui_update_time": 1
 }
