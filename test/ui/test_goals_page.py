@@ -3,7 +3,6 @@ from infra.config_provider import ConfigProvider
 from infra.ui.browser_wrapper import BrowserWrapper
 from infra.jira_bug_reporter import JiraBugReporter
 from infra.api.api_wrapper import APIWrapper
-from infra.jira_handler import JiraHandler
 from infra.utils import Utils
 from logic.api_and_ui.base_page_app import BasePageApp
 from logic.ui.goals_page import GoalsPageExpanded
@@ -24,7 +23,6 @@ class TestGoalsPage(unittest.TestCase):
         self._browser = BrowserWrapper()
         self._config = ConfigProvider.load_config_json()
         self._secret = ConfigProvider.load_secret_json()
-        self.jira_handler = JiraHandler()
         self._driver = self._browser.get_driver(self._config["base_url_app"])
         self._base_page_app = BasePageApp(self._driver)
         self._base_page_app.click_on_goals_button()
