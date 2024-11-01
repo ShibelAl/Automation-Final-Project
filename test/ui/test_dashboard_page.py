@@ -1,6 +1,6 @@
 import unittest
 from infra.jira_bug_reporter import JiraBugReporter
-from logic.ui.page_navigation import PageNavigation
+from logic.ui.page_manager import PageManager
 from logic.ui.chart_location_options import ChartLocationOptions
 
 
@@ -11,14 +11,14 @@ class TestDashboardPage(unittest.TestCase):
         Sets up the testing environment, completes the login process to enter to the main page,
         and creates a new blank project. Works automatically.
         """
-        self.page_navigation = PageNavigation()
-        self.dashboard_page = self.page_navigation.go_to_dashboard_page()
+        self.page_manager = PageManager()
+        self.dashboard_page = self.page_manager.go_to_dashboard_page()
 
     def tearDown(self):
         """
         Closes the browser after completing the test.
         """
-        self.page_navigation.close_browser()
+        self.page_manager.close_browser()
 
     @JiraBugReporter.report_bug(
         description="The drag-and-drop functionality for recommended charts on the dashboard page is not "
