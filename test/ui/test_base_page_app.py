@@ -1,30 +1,22 @@
 import unittest
-from infra.jira_handler import JiraHandler
 from infra.jira_bug_reporter import JiraBugReporter
-from infra.ui.browser_wrapper import BrowserWrapper
-from infra.config_provider import ConfigProvider
-from logic.ui.base_page_app import BasePageApp
+from logic.ui.page_manager import PageManager
 
 
 class TestBasePageApp(unittest.TestCase):
-    CREATE_PROJECT_PAGE_LINK = "https://app.asana.com/0/projects/new"
 
     def setUp(self):
         """
         Sets up the testing environment, opens the browser on the home page.
         """
-        self.browser = BrowserWrapper()
-        self.jira_handler = JiraHandler()
-        self.config = ConfigProvider.load_config_json()
-        self.secret = ConfigProvider.load_secret_json()
-        self.driver = self.browser.get_driver(self.config["base_url_app"])
-        self.base_page_app = BasePageApp(self.driver)
+        self.page_manager = PageManager()
+        self.base_page_app = self.page_manager.go_to_base_page_app()
 
     def tearDown(self):
         """
         Closes the browser after completing the test.
         """
-        self.browser.close_browser()
+        self.page_manager.close_browser()
 
     @JiraBugReporter.report_bug(
         description="After pressing on 'Create' in the upper left side of the page, a small, white pop-up "
@@ -44,8 +36,8 @@ class TestBasePageApp(unittest.TestCase):
         self.assertTrue(self.base_page_app.pop_up_after_pressing_create_is_displayed())
 
     @JiraBugReporter.report_bug(
-        description="After pressing on 'Create' in the upper left side of the page, and then 'Project', the new page "
-                    "for creating a new project didn't appear in the screen.",
+        description="After pressing on 'Create' in the upper left side of the page, and then 'Project', "
+                    "the new page for creating a new project didn't appear in the screen.",
         priority="Highest",
         labels=["UI", "Project", "Blocker"]
     )
@@ -58,4 +50,5 @@ class TestBasePageApp(unittest.TestCase):
         self.base_page_app.open_new_project()
 
         # Assert
-        self.assertEqual(self.driver.current_url, self.CREATE_PROJECT_PAGE_LINK)
+        self.assertEqual(self.page_manager.get_driver().current_url,
+                         self.page_manager.get_config("create_project_page_link"))
