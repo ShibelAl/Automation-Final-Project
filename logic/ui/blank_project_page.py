@@ -22,7 +22,8 @@ class BlankProjectPage(BasePage):
         """
         Fills the project name input field. It fills the field with a random string as default,
         but if given a string in the name parameter then it will fill the input field with name.
-        :param name: has a randomly generated string as default, represents the user input if given.
+
+        :param name: is a randomly generated string as default, represents the user input if given.
         """
         WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.PROJECT_NAME_FIELD))
@@ -32,17 +33,19 @@ class BlankProjectPage(BasePage):
         """
         Checks if the project name is displayed in the project template header,
         the project template appears right near the project name input field.
+
         :return: True, if the project name is displayed in the project template header, False otherwise.
         """
-        return WebDriverWait(self._driver, self._config["wait_time"]).until(
-            ec.visibility_of_element_located((By.XPATH, self.PROJECT_NAME_HEADER))
-        ).is_displayed()
+        project_name = WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.visibility_of_element_located((By.XPATH, self.PROJECT_NAME_HEADER)))
+        return project_name.is_displayed()
 
     def get_header_project_name_text(self):
         """
-        :return: The project name in the header of the project template.
         This function is used to check if the project name that the user inserts is
         showing in the project template as is, without changes.
+
+        :return: The project name that is in the header of the project template.
         """
         return WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.visibility_of_element_located((By.XPATH, self.PROJECT_NAME_HEADER))
