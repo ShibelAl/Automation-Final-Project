@@ -1,4 +1,3 @@
-from selenium.common import TimeoutException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -65,13 +64,9 @@ class GoalsPageExpanded(GoalsPage):
         :param goal_title: The title of the goal to check.
         :return: True if the goal title is visible, False otherwise.
         """
-        try:
-            goal_title_value = WebDriverWait(self._driver, self._config["wait_time"]).until(
-                ec.presence_of_element_located((By.XPATH, f"{self.GOAL_TITLE_INPUT_VALUE}'{goal_title}']"))
-            )
-            return goal_title_value.is_displayed()
-        except TimeoutException:
-            return False
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.presence_of_element_located((By.XPATH, f"{self.GOAL_TITLE_INPUT_VALUE}'{goal_title}']"))
+        ).is_displayed()
 
     def click_on_privacy_dropdown(self):
         """
@@ -101,13 +96,9 @@ class GoalsPageExpanded(GoalsPage):
         """
         value = "Public" if value == 0 else "Private"
 
-        try:
-            privacy_dropdown_value = WebDriverWait(self._driver, self._config["wait_time"]).until(
-                ec.presence_of_element_located((By.XPATH, f"{self.PRIVACY_DROPDOWN_VALUE}'{value}']"))
-            )
-            return privacy_dropdown_value.is_displayed()
-        except TimeoutException:
-            return False
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.presence_of_element_located((By.XPATH, f"{self.PRIVACY_DROPDOWN_VALUE}'{value}']"))
+        ).is_displayed()
 
     def fill_members_input_field(self, member):
         """
@@ -132,13 +123,9 @@ class GoalsPageExpanded(GoalsPage):
         :param member: The member name to check.
         :return: True if the member name is correct, False otherwise.
         """
-        try:
-            members_field_value = WebDriverWait(self._driver, self._config["wait_time"]).until(
-                ec.presence_of_element_located((By.XPATH, f"{self.MEMBERS_INPUT_FIELD_VALUE}'{member}']"))
-            )
-            return members_field_value.is_displayed()
-        except TimeoutException:
-            return False
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.presence_of_element_located((By.XPATH, f"{self.MEMBERS_INPUT_FIELD_VALUE}'{member}']"))
+        ).is_displayed()
 
     def click_on_save_goal_button(self):
         """
