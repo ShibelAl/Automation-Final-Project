@@ -1,7 +1,7 @@
 import unittest
 from infra.jira_bug_reporter import JiraBugReporter
 from logic.ui.page_manager import PageManager
-from logic.ui.chart_location_options import ChartLocationOptions
+from logic.utils.enums import ChartLocationOptions
 
 
 class TestDashboardPage(unittest.TestCase):

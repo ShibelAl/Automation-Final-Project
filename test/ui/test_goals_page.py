@@ -7,7 +7,7 @@ from infra.utils import Utils
 from logic.api_and_ui.base_page_app import BasePageApp
 from logic.ui.goals_page import GoalsPageExpanded
 from logic.api.goals import Goals
-from logic.utils import LogicUtils
+from logic.utils.logic_utils import LogicUtils
 
 
 class TestGoalsPage(unittest.TestCase):
