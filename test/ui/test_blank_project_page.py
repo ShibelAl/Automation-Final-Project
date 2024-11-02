@@ -1,35 +1,23 @@
 import unittest
-from infra.jira_handler import JiraHandler
 from infra.jira_bug_reporter import JiraBugReporter
-from infra.ui.browser_wrapper import BrowserWrapper
-from infra.config_provider import ConfigProvider
-from logic.ui.base_page_app import BasePageApp
-from logic.ui.new_project_page import NewProjectPage
-from logic.ui.blank_project_page import BlankProjectPage
+from infra.utils import Utils
+from logic.ui.page_manager import PageManager
 
 
 class TestNewProjectPage(unittest.TestCase):
 
     def setUp(self):
         """
-        Sets up the testing environment, completes the login process to enter to the main page,
-        and creates a new blank project.
+        Sets up the testing environment.
         """
-        self.browser = BrowserWrapper()
-        self.jira_handler = JiraHandler()
-        self.config = ConfigProvider.load_config_json()
-        self.secret = ConfigProvider.load_secret_json()
-        self.driver = self.browser.get_driver(self.config["base_url_app"])
-        self.base_page_app = BasePageApp(self.driver)
-        self.base_page_app.open_new_project()
-        self.new_project_page = NewProjectPage(self.driver)
-        self.new_project_page.click_on_blank_project_button()
+        self.page_manager = PageManager()
+        self.blank_project_page = self.page_manager.go_to_blank_project_page()
 
     def tearDown(self):
         """
         Closes the browser after completing the test.
         """
-        self.browser.close_browser()
+        self.page_manager.close_browser()
 
     @JiraBugReporter.report_bug(
         description="After typing the name of the project in the blank project template, it should appear in the "
@@ -41,11 +29,28 @@ class TestNewProjectPage(unittest.TestCase):
         """
         This function tests if the project name appears in the project template header.
         """
-        # Arrange
-        blank_project_page = BlankProjectPage(self.driver)
-
         # Act
-        blank_project_page.fill_project_name_input()
+        self.blank_project_page.fill_project_name_input()
 
         # Assert
-        self.assertTrue(blank_project_page.project_name_is_displayed())
+        self.assertTrue(self.blank_project_page.project_name_is_displayed())
+
+    @JiraBugReporter.report_bug(
+        description="After typing a random project name in the blank project template, the header should display the "
+                    "correct project name, but it displays incorrectly.",
+        priority="Medium",
+        labels=["UI", "Project"]
+    )
+    def test_blank_project_header_is_correct(self):
+        """
+        This function tests if the project header displays the correct name after typing a random name
+        into the project name input field.
+        """
+        # Arrange
+        random_name = Utils.generate_random_string()
+
+        # Act
+        self.blank_project_page.fill_project_name_input(random_name)
+
+        # Assert
+        self.assertEqual(self.blank_project_page.get_header_project_name_text(), random_name)
