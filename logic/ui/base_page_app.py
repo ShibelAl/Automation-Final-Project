@@ -1,4 +1,3 @@
-import logging
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -47,7 +46,6 @@ class BasePageApp(BasePage):
         """
         Clicks on Create and then on project, this function opens a new project.
         """
-        logging.info("Creating a new project, without specifying the project details")
         self.click_on_create_button()
         self.click_on_project_button_in_create()
 
