@@ -1,10 +1,7 @@
-import logging
 import traceback
 from infra.config_provider import ConfigProvider
-from infra.logging_setup import LoggingSetup
+from infra.logging_setup import logger
 from infra.jira_handler import JiraHandler
-
-LoggingSetup()
 
 
 class JiraBugReporter:
@@ -22,7 +19,7 @@ class JiraBugReporter:
                 test_name = test_method.__name__
                 try:
                     result = test_method(self)
-                    logging.info(f"{test_name} - passed successfully")
+                    logger.info(f"{test_name} - passed successfully")
                     return result
                 except AssertionError as e:
                     # use custom description if provided (from the test decorator), otherwise use error trace
@@ -30,7 +27,7 @@ class JiraBugReporter:
                     issue_description = description or f"Test failed with error:\n{error_trace}"
 
                     # log the error
-                    logging.error(f"{test_name} - assertion error")
+                    logger.error(f"{test_name} - assertion error")
 
                     # report the issue to jira
                     JiraBugReporter._jira_handler.create_bug_issue(
@@ -44,7 +41,7 @@ class JiraBugReporter:
                     raise e
 
                 except Exception as e:
-                    logging.exception(f"{test_name} - {e}\n")
+                    logger.error(f"{test_name} - **Check XPATH validity.")
                     raise e
 
             return wrapper
