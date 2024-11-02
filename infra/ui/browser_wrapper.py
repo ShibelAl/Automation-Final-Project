@@ -1,13 +1,10 @@
-import logging
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver import EdgeOptions
 from selenium.webdriver import FirefoxOptions
 from infra.config_provider import ConfigProvider
 from selenium.common.exceptions import WebDriverException
-from infra.logging_setup import LoggingSetup  # Ensure logging is properly set up
-
-LoggingSetup()
+from infra.logging_setup import logger
 
 
 class BrowserWrapper:
@@ -42,10 +39,10 @@ class BrowserWrapper:
             return self._driver
 
         except WebDriverException:
-            logging.error("Could not load web driver")
+            logger.error("Could not load web driver")
 
         except AttributeError:
-            logging.error("Web driver name is not valid")
+            logger.error("Web driver name is not valid")
 
     def close_browser(self):
         if self._driver:
