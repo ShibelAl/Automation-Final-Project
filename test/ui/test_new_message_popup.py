@@ -1,48 +1,35 @@
 import unittest
-from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
-from infra.ui.browser_wrapper import BrowserWrapper
-from infra.config_provider import ConfigProvider
-from logic.ui.login_page import LoginPage
-from logic.ui.base_page_app import BasePageApp
-from logic.ui.new_message_popup import NewMessagePopUp
+from infra.jira_bug_reporter import JiraBugReporter
+from logic.ui.page_manager import PageManager
 from infra.utils import Utils
 
 
 class TestNewMessagePopUp(unittest.TestCase):
     def setUp(self):
         """
-        Sets up the testing environment, completes the login process to enter to the main page,
-        opens a new message pop-up and deletes the previous draft (if there was any).
-        Works automatically.
+        Sets up the testing environment.
         """
-        self.browser = BrowserWrapper()
-        self.jira_handler = JiraHandler()
-        self.config = ConfigProvider.load_config_json()
-        self.secret = ConfigProvider.load_secret_json()
-        self.driver = self.browser.get_driver(self.config["base_url_app"])
-        self.login_page = LoginPage(self.driver)
-        self.login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
-        self.base_page_app = BasePageApp(self.driver)
-        self.base_page_app.click_on_create_button()
-        self.base_page_app.click_on_message_button_in_create()
-        self.message_popup = NewMessagePopUp(self.driver)
-        self.message_popup.close_draft_message()
+        self.page_manager = PageManager()
+        self.message_popup = self.page_manager.go_to_new_message_popup()
 
     def tearDown(self):
         """
         Closes the browser after completing the test.
-        Works automatically.
         """
-        self.driver.quit()
+        self.page_manager.close_browser()
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="The title of a sent message is not visible to the user after sending. "
+                    "The message title should be displayed in the message view.",
+        priority="High",
+        labels=["UI", "message", "message_title"]
+    )
     def test_sent_message_title_is_visible(self):
         """
         This function tests if the title in the message that has been sent is visible.
         """
         # Arrange
-        self.message_popup.add_message_receiver_email(self.config["asana_email"])
+        self.message_popup.add_message_receiver_email(self.page_manager.get_config("asana_email"))
 
         # Act
         self.message_popup.fill_add_subject_field(Utils.generate_random_string())
@@ -53,14 +40,19 @@ class TestNewMessagePopUp(unittest.TestCase):
         # Assert
         self.assertTrue(self.message_popup.view_message_title_is_visible())
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="The title of the sent message does not match the title entered by the user. "
+                    "The displayed title should be identical to the title inputted when the message was sent.",
+        priority="High",
+        labels=["UI", "message", "message_title"]
+    )
     def test_sent_message_title_is_correct(self):
         """
         This function tests if the title of the message that has been sent is identical
         to the title that the user inserted when sending the message.
         """
         # Arrange
-        self.message_popup.add_message_receiver_email(self.config["asana_email"])
+        self.message_popup.add_message_receiver_email(self.page_manager.get_config("asana_email"))
         subject = Utils.generate_random_string()
 
         # Act
