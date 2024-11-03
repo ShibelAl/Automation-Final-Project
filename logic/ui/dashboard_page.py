@@ -1,8 +1,5 @@
 from time import sleep
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions as ec
+from infra.ui.selenium_helpers import By, ActionChains, WebDriverWait, ec
 from infra.config_provider import ConfigProvider
 from logic.ui.base_page_app import BasePageApp
 

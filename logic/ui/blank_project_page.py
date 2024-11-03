@@ -1,6 +1,4 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
+from infra.ui.selenium_helpers import By, WebDriverWait, ec
 from infra.config_provider import ConfigProvider
 from infra.ui.base_page import BasePage
 from infra.utils import Utils

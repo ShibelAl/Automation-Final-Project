@@ -1,7 +1,4 @@
-from selenium.webdriver import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
+from infra.ui.selenium_helpers import By, Keys, WebDriverWait, ec
 from logic.api_and_ui.goals_page import GoalsPage
 from infra.config_provider import ConfigProvider
 
