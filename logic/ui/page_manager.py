@@ -32,6 +32,16 @@ class PageManager:
         """
         return BasePageApp(self._driver)
 
+    def go_to_new_project_page(self):
+        """
+        Navigates to the new project page, the pages appears after pressing create -> project.
+
+        :return: NewProjectPage instance representing the "create a new project" page.
+        """
+        self.go_to_base_page_app().open_new_project()
+
+        return NewProjectPage(self._driver)
+
     def go_to_blank_project_page(self):
         """
         Navigates to the blank project page.
@@ -39,8 +49,7 @@ class PageManager:
 
         :return: BlankProjectPage instance representing the blank project page.
         """
-        self.go_to_base_page_app().open_new_project()
-        NewProjectPage(self._driver).click_on_blank_project_button()
+        self.go_to_new_project_page().click_on_blank_project_button()
 
         return BlankProjectPage(self._driver)
 
