@@ -1,49 +1,37 @@
 import unittest
-from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
-from logic.ui.login_page import LoginPage
-from infra.config_provider import ConfigProvider
-from infra.ui.browser_wrapper import BrowserWrapper
-from logic.ui.base_page_app import BasePageApp
-from logic.ui.new_project_page import NewProjectPage
+from infra.jira_bug_reporter import JiraBugReporter
+from logic.ui.page_manager import PageManager
 
 
 class TestNewProjectPage(unittest.TestCase):
-    BLANK_PAGE_URL = "https://app.asana.com/0/projects/new/blank"
 
     def setUp(self):
         """
-        Sets up the testing environment, completes the login process to enter to the main page,
-        and clicks on create -> project. Works automatically.
+        Sets up the testing environment.
         """
-        self.browser = BrowserWrapper()
-        self.jira_handler = JiraHandler()
-        self.config = ConfigProvider.load_config_json()
-        self.secret = ConfigProvider.load_secret_json()
-        self.driver = self.browser.get_driver(self.config["base_url_app"])
-        self.login_page = LoginPage(self.driver)
-        self.login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
-        self.base_page_app = BasePageApp(self.driver)
-        self.base_page_app.open_new_project()
+        self.page_manager = PageManager()
+        self.new_project_page = self.page_manager.go_to_new_project_page()
 
     def tearDown(self):
         """
         Closes the browser after completing the test.
-        Works automatically.
         """
-        self.driver.quit()
+        self.page_manager.close_browser()
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="The button that is supposed to take the user to the new blank project template doesn't work,"
+                    "it is supposed to change the URL to the new page of blank project.",
+        priority="Highest",
+        labels=["UI", "Project", "Blank_Project"]
+    )
     def test_blank_project_button(self):
         """
         Tests if the "blank project" button works when creating new project,
         asserting that the current url is the expected url after pressing the button.
         """
-        # Arrange
-        new_project_page = NewProjectPage(self.driver)
-
         # Act
-        new_project_page.click_on_blank_project_button()
+        self.new_project_page.click_on_blank_project_button()
 
         # Assert
-        self.assertEqual(self.driver.current_url, self.BLANK_PAGE_URL)
+        self.assertEqual(self.page_manager.get_driver().current_url,
+                         self.page_manager.get_config("new_blank_project_page_url"))
