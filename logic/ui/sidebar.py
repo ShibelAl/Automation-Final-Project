@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
+from infra.config_provider import ConfigProvider
 from infra.ui.base_page import BasePage
 
 
@@ -9,12 +10,12 @@ class SideBar(BasePage):
 
     def __init__(self, driver):
         super().__init__(driver)
-        self._reporting_button = WebDriverWait(self._driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, self.REPORTING_BUTTON))
-        )
+        self._config = ConfigProvider().load_config_json()
 
     def click_on_reporting_button(self):
         """
         This function clicks on the "Reporting" button that appears in the sidebar.
         """
-        self._reporting_button.click()
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.element_to_be_clickable((By.XPATH, self.REPORTING_BUTTON))
+        ).click()
