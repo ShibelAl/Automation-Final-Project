@@ -29,12 +29,9 @@ class TestNewMessagePopUp(unittest.TestCase):
         This function tests if the title in the message that has been sent is visible.
         """
         # Arrange
-        self.message_popup.add_message_receiver_email(self.page_manager.get_config("asana_email"))
+        self.message_popup.prepare_and_send_message()
 
         # Act
-        self.message_popup.fill_add_subject_field(Utils.generate_random_string())
-        self.message_popup.fill_message_content(Utils.generate_random_string())
-        self.message_popup.click_on_send_button()
         self.message_popup.click_on_view_message_link()
 
         # Assert
@@ -52,13 +49,10 @@ class TestNewMessagePopUp(unittest.TestCase):
         to the title that the user inserted when sending the message.
         """
         # Arrange
-        self.message_popup.add_message_receiver_email(self.page_manager.get_config("asana_email"))
         subject = Utils.generate_random_string()
 
         # Act
-        self.message_popup.fill_add_subject_field(subject)
-        self.message_popup.fill_message_content(Utils.generate_random_string())
-        self.message_popup.click_on_send_button()
+        self.message_popup.prepare_and_send_message(title=subject)
         self.message_popup.click_on_view_message_link()
 
         # Assert
