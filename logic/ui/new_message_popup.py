@@ -1,11 +1,11 @@
 from time import sleep
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from logic.ui.base_page_app import BasePageApp
 from infra.config_provider import ConfigProvider
+from infra.utils import Utils
 
 
 class NewMessagePopUp(BasePageApp):
@@ -38,8 +38,9 @@ class NewMessagePopUp(BasePageApp):
         Inserts the email of the receiver of the message using the "email" parameter.
         :param email: a string that represents the email of the receiver.
         """
+        self.click_on_to_field_in_message_popup()
         self._message_receiver = WebDriverWait(self._driver, self._config["wait_time"]).until(
-            ec.presence_of_element_located((By.XPATH, self.TO_INPUT_FIELD))
+            ec.element_to_be_clickable((By.XPATH, self.TO_INPUT_FIELD))
         )
         self._message_receiver.send_keys(email)
         self._message_receiver.send_keys(Keys.RETURN)
@@ -61,6 +62,19 @@ class NewMessagePopUp(BasePageApp):
         WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.element_to_be_clickable((By.XPATH, self.SEND_BUTTON))
         ).click()
+        sleep(self._config["ui_update_time"])
+
+    def prepare_and_send_message(self, receiver=None, title=None, content=None):
+        if not receiver:
+            receiver = self._config["asana_email"]
+        if not title:
+            title = Utils.generate_random_string()
+        if not content:
+            content = Utils.generate_random_string()
+        self.add_message_receiver_email(receiver)
+        self.fill_add_subject_field(title)
+        self.fill_message_content(content)
+        self.click_on_send_button()
 
     def click_on_view_message_link(self):
         """
@@ -101,24 +115,9 @@ class NewMessagePopUp(BasePageApp):
         """
         Clicks on the "To" field, in order to fill it with the input afterward.
         """
-        WebDriverWait(self._driver, self._config["wait_time"]).until(
-            ec.presence_of_element_located((By.XPATH, self.TO_INPUT_FIELD))
-        ).click()
-
-    def close_draft_message(self):
-        """
-        Closes a draft message - if there was any - by clicking on the x sign.
-        If there wasn't a draft message, a Timeout exception will appear, so the function will
-        just pass, that means there is no draft message, carry on.
-        """
-        try:
-            WebDriverWait(self._driver, self._config["ui_update_time"]).until(
-                ec.element_to_be_clickable((By.XPATH, self.CLOSE_DRAFT_MESSAGE_BUTTON))
+        if WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.element_to_be_clickable((By.XPATH, self.TO_INPUT_FIELD))
+        ).is_displayed():
+            WebDriverWait(self._driver, self._config["wait_time"]).until(
+                ec.element_to_be_clickable((By.XPATH, self.TO_INPUT_FIELD))
             ).click()
-            sleep(self._config["ui_update_time"])
-            WebDriverWait(self._driver, self._config["ui_update_time"]).until(
-                ec.element_to_be_clickable((By.XPATH, self.DELETE_BUTTON_CLOSING_DRAFT))
-            ).click()
-            self.click_on_to_field_in_message_popup()
-        except TimeoutException:
-            pass
