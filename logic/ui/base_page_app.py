@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from selenium.common import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from infra.config_provider import ConfigProvider
@@ -11,6 +12,8 @@ class BasePageApp(BasePage):
     MESSAGE_BUTTON_IN_CREATE = '//span[text() = "Message"]'
     BLANK_PROJECT_BUTTON = '//div[@class = "DashedTile DashedTile--large FlowPickerTile-dashedTile"]'
     POP_UP_AFTER_PRESSING_CREATE = '//div[contains(@class, "LayerPositioner-layer")]'
+    CLOSE_DRAFT_MESSAGE_BUTTON = '//div[contains(@class, "collapsed")]//div[@aria-label = "Close"]'
+    DELETE_BUTTON_CLOSING_DRAFT = '//div[text() = "Delete message"]'
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -68,3 +71,25 @@ class BasePageApp(BasePage):
         return WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, self.BLANK_PROJECT_BUTTON))
         ).is_displayed()
+
+    def close_draft_message(self):
+        """
+        Closes a draft message - if there was any - by clicking on the x sign.
+        If there wasn't a draft message, a Timeout exception will appear, so the function will
+        just pass, that means there is no draft message, carry on.
+        """
+        try:
+            if WebDriverWait(self._driver, self._config["ui_update_time"]).until(
+                ec.element_to_be_clickable((By.XPATH, self.CLOSE_DRAFT_MESSAGE_BUTTON))
+            ).is_displayed():
+                WebDriverWait(self._driver, self._config["ui_update_time"]).until(
+                    ec.element_to_be_clickable((By.XPATH, self.CLOSE_DRAFT_MESSAGE_BUTTON))
+                ).click()
+            if WebDriverWait(self._driver, self._config["ui_update_time"]).until(
+                    ec.element_to_be_clickable((By.XPATH, self.DELETE_BUTTON_CLOSING_DRAFT))
+            ).is_displayed():
+                WebDriverWait(self._driver, self._config["ui_update_time"]).until(
+                    ec.element_to_be_clickable((By.XPATH, self.DELETE_BUTTON_CLOSING_DRAFT))
+                ).click()
+        except TimeoutException:
+            pass
