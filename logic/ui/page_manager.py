@@ -4,6 +4,7 @@ from logic.ui.base_page_app import BasePageApp
 from logic.ui.sidebar import SideBar
 from logic.ui.new_project_page import NewProjectPage
 from logic.ui.blank_project_page import BlankProjectPage
+from logic.ui.new_message_popup import NewMessagePopUp
 from logic.ui.reporting_page import ReportingPage
 from logic.ui.dashboard_page import DashboardPage
 
@@ -42,6 +43,22 @@ class PageManager:
         NewProjectPage(self._driver).click_on_blank_project_button()
 
         return BlankProjectPage(self._driver)
+
+    def go_to_new_message_popup(self):
+        """
+        Navigates to the new message popup.
+        First, go to base page app, and open the popup for sending a message, and then, if there is a draft
+        message from before, delete it (cleanup, so messages don't start to cluster).
+
+        :return: NewMessagePopUp instance representing the popup of the new message to be sent.
+        """
+        base_page_app = BasePageApp(self._driver)
+
+        base_page_app.close_draft_message()
+        base_page_app.click_on_create_button()
+        base_page_app.click_on_message_button_in_create()
+
+        return NewMessagePopUp(self._driver)
 
     def go_to_dashboard_page(self):
         """
