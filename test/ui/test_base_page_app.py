@@ -51,4 +51,4 @@ class TestBasePageApp(unittest.TestCase):
 
         # Assert
         self.assertEqual(self.page_manager.get_driver().current_url,
-                         self.page_manager.get_config("create_project_page_link"))
+                         self.page_manager.get_config("create_project_page_url"))
