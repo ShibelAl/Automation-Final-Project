@@ -1,22 +1,21 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
+from infra.config_provider import ConfigProvider
 from infra.ui.base_page import BasePage
 
 
 class NewProjectPage(BasePage):
     BLANK_PROJECT_BUTTON = '//div[@class = "DashedTile DashedTile--large FlowPickerTile-dashedTile"]'
-    WAIT_TIME = 20
 
     def __init__(self, driver):
         super().__init__(driver)
+        self._config = ConfigProvider.load_config_json()
 
     def click_on_blank_project_button(self):
         """
         Clicks on the "Blank project" button.
         """
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
-            EC.element_to_be_clickable((By.XPATH, self.BLANK_PROJECT_BUTTON))
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.element_to_be_clickable((By.XPATH, self.BLANK_PROJECT_BUTTON))
         ).click()
-        WebDriverWait(self._driver, self.WAIT_TIME).until(
-            EC.url_to_be("https://app.asana.com/0/projects/new/blank"))
