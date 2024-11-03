@@ -50,9 +50,9 @@ class TestNewMessagePopUp(unittest.TestCase):
         """
         # Arrange
         subject = Utils.generate_random_string()
+        self.message_popup.prepare_and_send_message(title=subject)
 
         # Act
-        self.message_popup.prepare_and_send_message(title=subject)
         self.message_popup.click_on_view_message_link()
 
         # Assert
