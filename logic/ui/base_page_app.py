@@ -11,6 +11,8 @@ class BasePageApp(BasePage):
     POP_UP_AFTER_PRESSING_CREATE = '//div[contains(@class, "LayerPositioner-layer")]'
     CLOSE_DRAFT_MESSAGE_BUTTON = '//div[contains(@class, "collapsed")]//div[@aria-label = "Close"]'
     DELETE_BUTTON_CLOSING_DRAFT = '//div[text() = "Delete message"]'
+    PROJECT_LIST = '//div[contains(@class, "projects")]//div[contains(@class, "RightClickMenu")]//a'
+    GOALS_BUTTON = '//span[text() = "Goals"]'
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -90,3 +92,41 @@ class BasePageApp(BasePage):
                 ).click()
         except TimeoutException:
             pass
+
+    def project_is_displayed(self, project_name):
+        """
+        Checks if a project with the specified name is displayed in the project list.
+        :param project_name: The name of the project to check.
+        :return: True if the project is displayed, False otherwise.
+        """
+        projects = WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.presence_of_all_elements_located((By.XPATH, self.PROJECT_LIST))
+        )
+        for project in projects:
+            if project_name in project.get_attribute("aria-label"):
+                return True
+        return False
+
+    def project_is_not_displayed(self, project_name):
+        """
+        Checks if a project with the specified name is not displayed in the project list.
+
+        :param project_name: The name of the project to check.
+        :return: True if the project is not displayed, False otherwise.
+        """
+        try:
+            WebDriverWait(self._driver, self._config["wait_time"]).until(
+                lambda driver: all(
+                    project_name not in project.get_attribute("aria-label")
+                    for project in driver.find_elements(By.XPATH, self.PROJECT_LIST)
+                )
+            )
+            return True
+        except TimeoutException:
+            return False
+
+    def click_on_goals_button(self):
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.element_to_be_clickable((By.XPATH, self.GOALS_BUTTON))
+        ).click()
+
