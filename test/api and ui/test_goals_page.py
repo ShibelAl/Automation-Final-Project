@@ -35,7 +35,11 @@ class TestGoalsPage(unittest.TestCase):
 
         self.page_manager.close_browser()
 
-    @JiraBugReporter.report_bug()
+    @JiraBugReporter.report_bug(
+        description="Creating a goal via the API does not result in its appearance in the UI as expected.",
+        priority="High",
+        labels=["UI", "Goal", "Creation"]
+    )
     def test_create_a_goal(self):
         """
         Tests the creation of a new goal via the API and verifies its presence in the UI.
@@ -57,7 +61,11 @@ class TestGoalsPage(unittest.TestCase):
         # Assert
         self.assertTrue(self.goals_page.goal_is_displayed())
 
-    @JiraBugReporter.report_bug()
+    @JiraBugReporter.report_bug(
+        description="Deleting a goal via the API does not remove it from the UI goal list as expected.",
+        priority="High",
+        labels=["UI", "Goal", "Deletion"]
+    )
     def test_delete_a_goal(self):
         """
         Tests the creation and deletion of a goal via the API and verifies its absence in the UI.
@@ -80,7 +88,11 @@ class TestGoalsPage(unittest.TestCase):
         # Assert
         self.assertTrue(self.goals_page.goal_is_not_displayed())
 
-    @JiraBugReporter.report_bug()
+    @JiraBugReporter.report_bug(
+        description="Updating a goal name via the API does not reflect the updated name in the UI as expected.",
+        priority="High",
+        labels=["UI", "Goal", "Update"]
+    )
     def test_update_goal_name(self):
         """
         Tests the creation and updating of a goal via the API and verifies the updated goal name in the UI.
