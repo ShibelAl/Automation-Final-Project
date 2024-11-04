@@ -8,16 +8,13 @@ from logic.api.time_periods import TimePeriods
 from logic.utils.logic_utils import LogicUtils
 
 
-class TestGoals(unittest.TestCase):
+class TestGoalsPage(unittest.TestCase):
     """
     Test class for validating the creation, deletion, and updating of goals within a project using Asana's UI and API.
     """
     def setUp(self):
         """
         Sets up the test environment before each test.
-
-        Initializes the browser, loads configuration and secret data, and logs into the application.
-        Also sets up the necessary API and UI components for testing goals.
         """
         self.page_manager = PageManager()
         self.goals_page = self.page_manager.go_to_goals_page()
