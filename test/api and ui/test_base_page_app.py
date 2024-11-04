@@ -56,7 +56,7 @@ class TestProjects(unittest.TestCase):
         """
         # Arrange
         new_project_name = Utils.generate_random_string()
-        new_project = self.projects.create_a_project()
+        new_project = self.projects.create_a_project(new_project_name)
 
         # Act
         new_project_gid = new_project.data["data"]["gid"]
