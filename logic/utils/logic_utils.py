@@ -6,6 +6,9 @@ class LogicUtils:
     """
     Utility class for logic and test functions.
     """
+    TIME_OUT = 5
+    INTERVAL = 1
+
     @staticmethod
     def generate_random_binary():
         """
@@ -16,7 +19,7 @@ class LogicUtils:
         return random.randint(0, 1)
 
     @staticmethod
-    def wait_for_goals_to_exist(saved_goals, workspace_gid, timeout=5, interval=1):
+    def wait_for_goals_to_exist(saved_goals, workspace_gid, timeout=TIME_OUT, interval=INTERVAL):
         """
         Waits for at least one goal to exist in the specified workspace.
 
@@ -24,7 +27,6 @@ class LogicUtils:
         :param workspace_gid: The unique identifier (GID) of the workspace.
         :param timeout: Maximum time to wait in seconds.
         :param interval: Time to wait between checks in seconds.
-        :return: True if goals exist within the timeout, False otherwise.
         """
         start_time = time.time()
 
@@ -34,9 +36,29 @@ class LogicUtils:
             goals = response.data['data']
 
             if goals:
-                return True
+                break
 
             # wait for the interval before trying again
             time.sleep(interval)
 
-        return False
+    @staticmethod
+    def wait_for_project_and_return_gid(saved_projects, timeout=TIME_OUT, interval=INTERVAL):
+        """
+        Waits for at least one project to exist in the database.
+        :param saved_projects: An object responsible for fetching projects, expected to have a `get_projects` method.
+        :param timeout: Maximum time to wait in seconds.
+        :param interval: Time to wait between checks in seconds.
+        :return: gid of the project.
+        """
+        start_time = time.time()
+
+        while time.time() - start_time < timeout:
+            # fetch goals from the workspace
+            response = saved_projects.get_multiple_projects()
+            project = response.data['data'][0]  # enough to be one project
+
+            if project:
+                return project['gid']
+
+            # wait for the interval before trying again
+            time.sleep(interval)
