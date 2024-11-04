@@ -4,6 +4,7 @@ from logic.ui.base_page_app import BasePageApp
 from logic.ui.sidebar import SideBar
 from logic.ui.new_project_page import NewProjectPage
 from logic.ui.blank_project_page import BlankProjectPage
+from logic.ui.goals_page import GoalsPage
 from logic.ui.new_message_popup import NewMessagePopUp
 from logic.ui.reporting_page import ReportingPage
 from logic.ui.dashboard_page import DashboardPage
@@ -39,7 +40,6 @@ class PageManager:
         :return: NewProjectPage instance representing the "create a new project" page.
         """
         self.go_to_base_page_app().open_new_project()
-
         return NewProjectPage(self._driver)
 
     def go_to_blank_project_page(self):
@@ -50,8 +50,11 @@ class PageManager:
         :return: BlankProjectPage instance representing the blank project page.
         """
         self.go_to_new_project_page().click_on_blank_project_button()
-
         return BlankProjectPage(self._driver)
+
+    def go_to_goals_page(self):
+        self.go_to_base_page_app().click_on_goals_button()
+        return GoalsPage(self._driver)
 
     def go_to_new_message_popup(self):
         """
