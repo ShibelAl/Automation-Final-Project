@@ -1,13 +1,9 @@
 import unittest
-from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
-from infra.ui.browser_wrapper import BrowserWrapper
+from infra.jira_bug_reporter import JiraBugReporter
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
-from infra.config_provider import ConfigProvider
 from logic.api.projects import Projects
-from logic.api_and_ui.base_page_app import BasePageApp
-from logic.ui.login_page import LoginPage
+from logic.ui.page_manager import PageManager
 
 
 class TestProjects(unittest.TestCase):
@@ -19,24 +15,22 @@ class TestProjects(unittest.TestCase):
         """
         Sets up the test cases by initializing necessary components.
         """
-        self.browser = BrowserWrapper()
-        self.jira_handler = JiraHandler()
-        self.config = ConfigProvider.load_config_json()
-        self.secret = ConfigProvider.load_secret_json()
-        self.driver = self.browser.get_driver(self.config["base_url_app"])
-        self.login_page = LoginPage(self.driver)
-        self.login_page.login_flow(self.config["asana_email"], self.secret["asana_password"])
-        self.base_page_app = BasePageApp(self.driver)
-        self._api_request = APIWrapper()
-        self.projects = Projects(self._api_request)
+        self.page_manager = PageManager()
+        self.base_page_app = self.page_manager.go_to_base_page_app()
+        self.api_request = APIWrapper()
+        self.projects = Projects(self.api_request)
 
     def tearDown(self):
         """
         Tear down the test cases by quitting the WebDriver.
         """
-        self.driver.quit()
+        self.page_manager.close_browser()
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Creating a new project does not add it to the project list that appears in the sidebar.",
+        priority="High",
+        labels=["UI", "Project", "Creation"]
+    )
     def test_create_a_project(self):
         """
         Tests creating a new project and verifying it is added to the list of existing projects.
@@ -45,26 +39,28 @@ class TestProjects(unittest.TestCase):
         new_project_name = Utils.generate_random_string()
 
         # Act
-        new_project = self.projects.create_a_project(new_project_name)
+        self.projects.create_a_project(new_project_name)
 
         # Assert
         self.assertTrue(self.base_page_app.project_is_displayed(new_project_name),
                         f"The project '{new_project_name}' was not found in the project list.")
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Deleting a project does not remove it from the project list that appears in the sidebar.",
+        priority="Medium",
+        labels=["UI", "Project", "Deletion"]
+    )
     def test_delete_a_project(self):
         """
         Tests creating and deleting a project and verifying it is removed from the list of existing projects.
         """
         # Arrange
         new_project_name = Utils.generate_random_string()
+        new_project = self.projects.create_a_project()
 
         # Act
-        new_project = self.projects.create_a_project(new_project_name)
-
-        # Delete the project
         new_project_gid = new_project.data["data"]["gid"]
-        deleted_project = self.projects.delete_a_project(new_project_gid)
+        self.projects.delete_a_project(new_project_gid)
 
         # Assert
         self.assertTrue(self.base_page_app.project_is_not_displayed(new_project_name),
