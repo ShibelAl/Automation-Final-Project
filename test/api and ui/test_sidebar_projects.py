@@ -4,26 +4,33 @@ from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from logic.api.projects import Projects
 from logic.ui.page_manager import PageManager
+from logic.utils.logic_utils import LogicUtils
 
 
-class TestProjects(unittest.TestCase):
+class TestSidebarProjects(unittest.TestCase):
     """
     This class contains test cases for creating and deleting projects,
-    and verifying their presence in the UI.
+    and verifying their presence in the home page sidebar.
     """
     def setUp(self):
         """
-        Sets up the test cases by initializing necessary components.
+        Sets up the test environment before each test.
         """
         self.page_manager = PageManager()
         self.base_page_app = self.page_manager.go_to_base_page_app()
         self.api_request = APIWrapper()
         self.projects = Projects(self.api_request)
+        self.project_created = False
 
     def tearDown(self):
         """
-        Tear down the test cases by quitting the WebDriver.
+        Deletes the created project - if created one, and then closes the webdriver.
         """
+        if self.project_created:
+            # wait for projects to be present in the workspace before deletion
+            project_gid = LogicUtils.wait_for_project_and_return_gid(self.projects)
+            self.projects.delete_a_project(project_gid)
+
         self.page_manager.close_browser()
 
     @JiraBugReporter.report_bug(
@@ -40,6 +47,7 @@ class TestProjects(unittest.TestCase):
 
         # Act
         self.projects.create_a_project(new_project_name)
+        self.project_created = True
 
         # Assert
         self.assertTrue(self.base_page_app.project_is_displayed(new_project_name),
@@ -57,9 +65,9 @@ class TestProjects(unittest.TestCase):
         # Arrange
         new_project_name = Utils.generate_random_string()
         new_project = self.projects.create_a_project(new_project_name)
+        new_project_gid = new_project.data["data"]["gid"]
 
         # Act
-        new_project_gid = new_project.data["data"]["gid"]
         self.projects.delete_a_project(new_project_gid)
 
         # Assert
