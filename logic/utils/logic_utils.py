@@ -45,7 +45,7 @@ class LogicUtils:
     def wait_for_project_and_return_gid(saved_projects, timeout=TIME_OUT, interval=INTERVAL):
         """
         Waits for at least one project to exist in the database.
-        :param saved_projects: An object responsible for fetching projects, expected to have a `get_projects` method.
+        :param saved_projects: An object responsible for fetching projects.
         :param timeout: Maximum time to wait in seconds.
         :param interval: Time to wait between checks in seconds.
         :return: gid of the project.
@@ -53,7 +53,7 @@ class LogicUtils:
         start_time = time.time()
 
         while time.time() - start_time < timeout:
-            # fetch goals from the workspace
+            # fetch projects from the workspace
             response = saved_projects.get_multiple_projects()
             project = response.data['data'][0]  # enough to be one project
 
