@@ -12,10 +12,6 @@ class TestGoalsPage(unittest.TestCase):
     def setUp(self):
         """
         Set up the test environment.
-
-        Initializes the browser and WebDriver, loads the configuration and secrets,
-        and navigates to the Goals page in the Asana app.
-        Prepares the API client and Goals logic for interacting with the Asana API.
         """
         self.page_manager = PageManager()
         self.goals_page = self.page_manager.go_to_goals_page()
@@ -25,8 +21,8 @@ class TestGoalsPage(unittest.TestCase):
 
     def tearDown(self):
         """
-        Waits for new goals to exist before attempting to delete them.
         Deletes all goals in the workspace if existed, and then closes the webdriver.
+        Waits for new goals to exist before attempting to delete them.
         """
         # first we check if the test created any goals before attempting to delete it.
         if self._goal_created:
