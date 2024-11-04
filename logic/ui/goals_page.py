@@ -1,9 +1,9 @@
 from infra.ui.selenium_helpers import By, Keys, WebDriverWait, ec
-from logic.api_and_ui.goals_page import GoalsPage
 from infra.config_provider import ConfigProvider
+from logic.ui.base_page_app import BasePageApp
 
 
-class GoalsPageExpanded(GoalsPage):
+class GoalsPage(BasePageApp):
     ADD_GOAL_BUTTON = '//div[text() = "Add goal"]'
     NEW_GOAL_PANEL = '//div[contains(@class, "ModalPaneWithBuffer-pane")]'
     GOAL_TITLE_INPUT = '//input[@id = "create_goal_dialog_name_input"]'
@@ -15,6 +15,8 @@ class GoalsPageExpanded(GoalsPage):
     MEMBERS_INPUT_FIELD_VALUE = (f'//span[@class = "TypographyPresentation TypographyPresentation--overflowTruncate" '
                                  f'and text() =')
     SAVE_GOAL_BUTTON = '//div[text() = "Save goal"]'
+    GOALS_LIST = '//div[@class = "SortableList-sortableItemContainer"]'
+    GOAL_NAME_CONTAINER = '//span[contains(@class, "GoalCardWithProgressBar-name")'
 
     def __init__(self, driver):
         """
@@ -61,8 +63,8 @@ class GoalsPageExpanded(GoalsPage):
         :param goal_title: The title of the goal to check.
         :return: True if the goal title is visible, False otherwise.
         """
-        WebDriverWait(self._driver, self._config["wait_time"]).until(
-            ec.presence_of_element_located((By.XPATH, f"{self.GOAL_TITLE_INPUT_VALUE}'{goal_title}']"))
+        return WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.visibility_of_element_located((By.XPATH, f"{self.GOAL_TITLE_INPUT_VALUE}'{goal_title}']"))
         ).is_displayed()
 
     def click_on_privacy_dropdown(self):
@@ -93,7 +95,7 @@ class GoalsPageExpanded(GoalsPage):
         """
         value = "Public" if value == 0 else "Private"
 
-        WebDriverWait(self._driver, self._config["wait_time"]).until(
+        return WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, f"{self.PRIVACY_DROPDOWN_VALUE}'{value}']"))
         ).is_displayed()
 
@@ -120,7 +122,7 @@ class GoalsPageExpanded(GoalsPage):
         :param member: The member name to check.
         :return: True if the member name is correct, False otherwise.
         """
-        WebDriverWait(self._driver, self._config["wait_time"]).until(
+        return WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.presence_of_element_located((By.XPATH, f"{self.MEMBERS_INPUT_FIELD_VALUE}'{member}']"))
         ).is_displayed()
 
@@ -155,3 +157,39 @@ class GoalsPageExpanded(GoalsPage):
         self.fill_members_input_field(member_name)
         self.click_on_save_goal_button()
         self.go_back()
+
+    def goal_is_displayed(self):
+        """
+        Checks if any goal is displayed on the Goals page.
+
+        :return: True if a goal is displayed, False otherwise.
+        """
+        return WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.presence_of_all_elements_located((By.XPATH, self.GOALS_LIST))
+        )[0].is_displayed()
+
+    def goal_is_not_displayed(self):
+        """
+        Checks if the goals element is not visible or not present on the Goals page.
+
+        :return: True if the goals element is not visible, False if it is still visible.
+        """
+        # Wait until the element is either invisible or not present at all
+        element_invisible = WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.invisibility_of_element_located((By.XPATH, self.GOALS_LIST))
+        )
+        return element_invisible  # Will return True if the element is not visible
+
+    def is_goal_name(self, goal_name):
+        """
+        Checks if the goal name displayed on the page matches the provided goal name.
+
+        :param goal_name: The name of the goal to check.
+        :return: True if the goal name matches, False otherwise.
+        """
+        goal_name_element = WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.presence_of_element_located((By.XPATH,
+                                            f"{self.GOAL_NAME_CONTAINER} and text()='{goal_name}']"))
+        )
+        # return True if the goal name matches
+        return goal_name_element.is_displayed()
