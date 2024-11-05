@@ -1,6 +1,5 @@
 import unittest
-from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
+from infra.jira_bug_reporter import JiraBugReporter
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
@@ -10,18 +9,24 @@ from logic.api.memberships import Memberships
 
 
 class TestMemberships(unittest.TestCase):
+    GMAIL = "@gmail.com"
+
     def setUp(self):
         """
         Sets up the test cases by initializing necessary components.
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
-        self.jira_handler = JiraHandler()
         self.projects = Projects(self._api_request)
         self.workspaces = Workspaces(self._api_request)
         self.memberships = Memberships(self._api_request)
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Creating a membership does not reflect in the project membership list, "
+                    "or fails to establish the membership.",
+        priority="High",
+        labels=["API", "Membership"]
+    )
     def test_create_a_membership(self):
         """
         Tests the creation of a membership by performing the following steps:
@@ -35,7 +40,7 @@ class TestMemberships(unittest.TestCase):
         new_project_name = Utils.generate_random_string()
         new_project = self.projects.create_a_project(new_project_name)
 
-        new_user_name = f"{Utils.generate_random_string()}@gmail.com"
+        new_user_name = f"{Utils.generate_random_string()}{self.GMAIL}"
         new_user = self.workspaces.add_a_user_to_workspace(new_user_name)
 
         new_project_gid = new_project.data['data']['gid']

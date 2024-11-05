@@ -1,7 +1,5 @@
 import unittest
-
-from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
+from infra.jira_bug_reporter import JiraBugReporter
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
@@ -20,11 +18,15 @@ class TestTasks(unittest.TestCase):
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
-        self.jira_handler = JiraHandler()
         self.projects = Projects(self._api_request)
         self.tasks = Tasks(self._api_request)
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Creating a task within a project doesn't reflect the task's creation status or fails to return "
+                    "a 201 status code.",
+        priority="Highest",
+        labels=["API", "Task", "Creation"]
+    )
     def test_create_a_task(self):
         """
         Tests creating a new task and verifying it was successfully created.
@@ -46,7 +48,11 @@ class TestTasks(unittest.TestCase):
         # Assert
         self.assertEqual(new_task.status, 201)
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Task is not associated with the specified project, causing potential data consistency issues.",
+        priority="High",
+        labels=["API", "Task", "Project", "Association"]
+    )
     def test_task_added_to_exact_project(self):
         """
         Tests that a task is correctly added to the specified project.
@@ -71,7 +77,12 @@ class TestTasks(unittest.TestCase):
         self.assertIn(new_task_name, self.tasks.tasks_names(existing_tasks.data),
                       f"{new_task_name} not found in existing tasks.")
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Deleting a task doesn't remove it from the list of existing tasks, "
+                    "or fails to return a 200 status code.",
+        priority="High",
+        labels=["API", "Task", "Deletion"]
+    )
     def test_delete_a_task(self):
         """
         Tests deleting a task and verifying it is removed from the list of existing tasks.

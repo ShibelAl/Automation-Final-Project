@@ -1,7 +1,6 @@
 import unittest
-from infra.test_failure_handler import TestFailureHandler
+from infra.jira_bug_reporter import JiraBugReporter
 from infra.utils import Utils
-from infra.jira_handler import JiraHandler
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
 from logic.api.workspaces import Workspaces
@@ -10,18 +9,23 @@ from logic.api.users import Users
 
 
 class TestWorkspaces(unittest.TestCase):
+    GMAIL = "@gmail.com"
+
     def setUp(self):
         """
         Sets up the test cases by initializing necessary components.
         """
         self._config = ConfigProvider.load_config_json()
         self._api_request = APIWrapper()
-        self.jira_handler = JiraHandler()
         self.workspaces = Workspaces(self._api_request)
         self.projects = Projects(self._api_request)
         self.users = Users(self._api_request)
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Adding a user to the workspace fails or doesn't return the correct status code.",
+        priority="High",
+        labels=["API", "User", "Workspace", "Addition"]
+    )
     def test_add_user_to_workspace(self):
         """
         Tests adding a new user to the workspace and verifying the user is added successfully.
@@ -36,7 +40,7 @@ class TestWorkspaces(unittest.TestCase):
         7. Asserts that the new user's global ID is in the list of user global IDs in the workspace.
         """
         # Arrange
-        new_user_name = f"{Utils.generate_random_string()}@gmail.com"
+        new_user_name = f"{Utils.generate_random_string()}{self.GMAIL}"
 
         # Act
         new_user = self.workspaces.add_a_user_to_workspace(new_user_name)
@@ -51,7 +55,11 @@ class TestWorkspaces(unittest.TestCase):
         self.assertEqual(new_user.status, 200)
         self.assertIn(new_user_gid, workspace_user_gids)
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Updating the workspace name fails or doesn't reflect the change in retrieved workspace details.",
+        priority="High",
+        labels=["API", "Workspace", "Update"]
+    )
     def test_update_workspace_name(self):
         """
         Tests updating the name of a workspace and verifying the update is successful.

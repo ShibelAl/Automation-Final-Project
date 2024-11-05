@@ -1,6 +1,5 @@
 import unittest
-from infra.jira_handler import JiraHandler
-from infra.test_failure_handler import TestFailureHandler
+from infra.jira_bug_reporter import JiraBugReporter
 from infra.utils import Utils
 from infra.api.api_wrapper import APIWrapper
 from infra.config_provider import ConfigProvider
@@ -16,7 +15,6 @@ class TestProjects(unittest.TestCase):
         """
         cls._config = ConfigProvider.load_config_json()
         cls._api_request = APIWrapper()
-        cls._jira_handler = JiraHandler()
         cls._projects = Projects(cls._api_request)
 
     @classmethod
@@ -45,7 +43,11 @@ class TestProjects(unittest.TestCase):
         except Exception as e:
             print(f"tearDownClass - Exception occurred while deleting project: {e}")
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Creating a project does not add it to the list of existing projects.",
+        priority="Highest",
+        labels=["API", "Project", "Creation"]
+    )
     def test_create_a_project(self):
         """
         Tests creating a new project and verifying it is added to the list of existing projects.
@@ -69,7 +71,12 @@ class TestProjects(unittest.TestCase):
         self.assertIn(new_project_name, self._projects.projects_names(existing_projects.data),
                       f"{new_project_name} not found in existing projects.")
 
-    @TestFailureHandler.handle_test_failure
+    @JiraBugReporter.report_bug(
+        description="Deleting a project does not remove it from the list of existing projects "
+                    "or fails to delete it entirely.",
+        priority="Highest",
+        labels=["API", "Project", "Deletion"]
+    )
     def test_delete_project(self):
         """
         Tests deleting a project and verifying it is removed from the list of existing projects.
