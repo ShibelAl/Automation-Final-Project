@@ -51,3 +51,15 @@ class TestDashboardPage(unittest.TestCase):
                              "Left chart was not successfully moved to the right position.")
         self.assertDictEqual(final_right_chart_location, initial_left_chart_location,
                              "Right chart was not successfully moved to the left position.")
+
+    def test_fill_date_filter_input_field_with_all_punctuations(self):
+        """
+        This test only works on 'Incomplete tasks by project' chart.
+        Just for training purposes.
+        """
+        self.dashboard_page.click_on_incomplete_tasks_green_chart()
+        failing_chars = self.dashboard_page.fill_date_filter_input_field_with_all_punctuations()
+
+        # assert that no characters appear in the input field
+        self.assertEqual(failing_chars, [],
+                         f"The following characters should not appear in the input field: {failing_chars}")
