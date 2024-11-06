@@ -52,6 +52,12 @@ class TestDashboardPage(unittest.TestCase):
         self.assertDictEqual(final_right_chart_location, initial_left_chart_location,
                              "Right chart was not successfully moved to the left position.")
 
+    @JiraBugReporter.report_bug(
+        description="The input filed the amount of days/weeks/months in the 'Incomplete tasks by project' "
+                    "chart is accepting non numerical characters, even though it shouldn't",
+        priority="Medium",
+        labels=["UI", "Incomplete tasks by project", "Charts", "Input_field"]
+    )
     def test_fill_date_filter_input_field_with_all_punctuations(self):
         """
         This test only works on 'Incomplete tasks by project' chart.
