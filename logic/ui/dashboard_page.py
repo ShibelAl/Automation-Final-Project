@@ -1,3 +1,4 @@
+import string
 from time import sleep
 from infra.ui.selenium_helpers import By, ActionChains, WebDriverWait, ec
 from infra.config_provider import ConfigProvider
@@ -11,6 +12,10 @@ class DashboardPage(BasePageApp):
     PROJECTS_BY_STATUS = '(//div[@class = "CardGalleryCategory-card"][3])'
     LEFT_CHART_HEADER_TITLE_WRAPPER = '//h6[contains(text(), "Incomplete tasks")]'
     RIGHT_CHART_HEADER_TITLE_WRAPPER = '//h6[contains(text(), "Projects by project")]'
+    ADD_FILTER_BUTTON = '//div[@role="button" and text()="Add filter"]'
+    DATE_BUTTON_IN_FILTER = '//span[contains(text(), "Date")]'
+    COMPLETION_DATE_BUTTON = '//span[contains(text(), "Completion date")]'
+    DATE_FILTER_NUMBER_INPUT = '//input[@type = "number"]'
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -25,6 +30,57 @@ class DashboardPage(BasePageApp):
         WebDriverWait(self._driver, self._config["wait_time"]).until(
             ec.element_to_be_clickable((By.XPATH, self.INCOMPLETE_TASKS_GREEN_CHART))
         ).click()
+
+    def fill_date_filter_input_field_with_all_punctuations(self):
+        """
+        Fills the input field with each punctuation/whitespace character,
+        one by one, after scrolling to make the input field visible.
+
+        This function only works on 'Incomplete tasks by project' chart.
+        *** Just for training purposes.
+        """
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.visibility_of_element_located((By.XPATH, self.ADD_FILTER_BUTTON))
+        )
+        add_filter_button_element = self._driver.find_element(By.XPATH, self.ADD_FILTER_BUTTON)
+
+        # scroll down to the element and click it
+        action = ActionChains(self._driver)
+        action.move_to_element(add_filter_button_element).click().perform()
+
+        # click on the other buttons to reach the input field
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.element_to_be_clickable((By.XPATH, self.DATE_BUTTON_IN_FILTER))
+        ).click()
+
+        WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.element_to_be_clickable((By.XPATH, self.COMPLETION_DATE_BUTTON))
+        ).click()
+
+        # list of non_numeric characters to fill in the input field
+        non_numeric_chars = list(string.punctuation + " \t\n")
+
+        input_field = WebDriverWait(self._driver, self._config["wait_time"]).until(
+            ec.element_to_be_clickable((By.XPATH, self.DATE_FILTER_NUMBER_INPUT))
+        )
+
+        failing_chars = []
+
+        # filling each character in non_numeric_chars into the input field
+        for char in non_numeric_chars:
+            input_field.clear()  # clear the field before entering the next character
+            input_field.send_keys(char)
+
+            # get the current value of the input field and check if the character is present
+            current_value = input_field.get_attribute("value")
+
+            # if the character is present, add it to the failing_chars list
+            if char in current_value:
+                failing_chars.append(char)
+
+            input_field.clear()
+
+        return failing_chars
 
     def click_on_create_button_in_add_chart_popup(self):
         """
