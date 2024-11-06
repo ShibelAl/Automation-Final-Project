@@ -25,7 +25,6 @@ class GoalsPage(BasePageApp):
         :param driver: WebDriver instance used for interacting with the browser.
         """
         super().__init__(driver)
-        self._privacy_dropdown = None
         self._config = ConfigProvider.load_config_json()
 
     def click_on_add_goal_button(self):
